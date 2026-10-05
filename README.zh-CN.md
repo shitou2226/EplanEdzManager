@@ -43,7 +43,7 @@ EPLAN 引用隔离在集成边界；Desktop、Reader 和 SQLite 层不引用 EPL
 
 ## 安装
 
-使用 Beta Release 的 Setup 或 Portable ZIP；源码目录不是安装包。
+从 [GitHub Releases](https://github.com/shitou2226/EplanEdzManager/releases) 下载 Beta 的 Setup 或 Portable ZIP；源码目录不是安装包。
 
 ### Setup
 

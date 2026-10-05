@@ -43,7 +43,7 @@ EPLAN references remain in the integration boundary; the Desktop, reader and SQL
 
 ## Installation
 
-Use the Setup or Portable ZIP distributed with the beta release; source checkout is not an installation package.
+Download the Setup or Portable ZIP from [GitHub Releases](https://github.com/shitou2226/EplanEdzManager/releases); source checkout is not an installation package.
 
 ### Setup
 

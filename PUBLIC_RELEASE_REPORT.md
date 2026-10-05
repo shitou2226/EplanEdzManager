@@ -2,13 +2,13 @@
 
 ## Status
 
-Local public-source preparation: **PASS**. GitHub repository creation, push, release upload and fresh public clone verification: **PENDING**. This document does not claim that publication has occurred.
+Local public-source preparation and new Public repository creation: **PASS**. Push, release upload and fresh public clone verification: **PENDING**. This document does not claim that source or assets have been uploaded.
 
 ## Repository and history
 
-- Repository URL: pending creation under the owner-confirmed account `shitou2226`, name `EplanEdzManager`.
+- Repository URL: https://github.com/shitou2226/EplanEdzManager (new Public repository created after authenticated same-name absence check).
 - Requested visibility: Public.
-- Public commit SHA: pending the first independent commit; retrieve using `git rev-parse HEAD`.
+- Initial public source commit SHA: `e63086f869e5284da08813a9832d9ed5ad45d859`.
 - Planned tag: `v1.0.0-beta.3`; no tag has been pushed yet.
 - Release URL: pending.
 - Git identity: owner-confirmed GitHub username and public noreply email, configured only in the new repository.
@@ -53,7 +53,7 @@ Excluded: old history, private historical reports, ignored local props/configura
 - Picture/EMA references verified; other resource categories remain unverified.
 - Private vendor regression baselines are unavailable in the public checkout by design. Passing offline tests is not a claim of connected integration verification.
 - No public CI workflow/badge added. Licensed EPLAN integration is local-only.
-- Private vulnerability-reporting availability must be verified after repository creation; no sensitive contact address published.
-- GitHub CLI authentication must be completed locally by the owner; credentials are not collected in chat or committed.
+- GitHub private vulnerability reporting enabled and verified after repository creation; no sensitive contact address published.
+- GitHub CLI authentication was completed locally by the owner and the authenticated account verified; credentials were not collected in chat or committed.
 
 Stop after publication and verification. No video production or new business features are included in this phase.

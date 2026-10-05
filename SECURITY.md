@@ -6,9 +6,9 @@ This is an unsigned beta. The latest beta is the review target; no security-supp
 
 Do not disclose exploitation details, credentials, private paths, EDZ/MDB databases, project files or unredacted diagnostic bundles in public issues.
 
-Use GitHub's **Report a vulnerability** action in the repository Security tab only if private vulnerability reporting is enabled and the action is available. If it is not available, open a minimal issue requesting a private reporting channel, without sensitive details. No personal email address is published by this project.
+GitHub private vulnerability reporting is enabled for this repository. Use [Report a vulnerability](https://github.com/shitou2226/EplanEdzManager/security/advisories/new) in the Security tab. If that private action is unavailable to you, open a minimal issue requesting a private reporting channel, without sensitive details. No personal email address is published by this project.
 
-This policy does not claim that private reporting has already been enabled. Availability must be verified when the GitHub repository is created.
+The setting was verified through the repository API after creation. Do not submit sensitive details through an ordinary public issue.
 
 ## Safe sharing
 

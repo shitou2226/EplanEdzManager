@@ -177,7 +177,11 @@ foreach ($test in $regularTests) {
 }
 if ($IncludeEplanIntegration) {
     $integrationProject = Join-Path $repositoryRoot 'tests\EplanEdzManager.EplanBridge.IntegrationTests\EplanEdzManager.EplanBridge.IntegrationTests.csproj'
-    Invoke-Checked dotnet @('test', $integrationProject, '-c', 'Release', '--no-build', '--no-restore', '--verbosity', 'minimal')
+    # Import cases consume validated EDZ outputs from export cases. xUnit class
+    # ordering is not guaranteed, especially in a fresh public checkout.
+    foreach ($integrationClass in @('Phase4IntegrationTests', 'Phase5IntegrationTests')) {
+        Invoke-Checked dotnet @('test', $integrationProject, '-c', 'Release', '--no-build', '--no-restore', '--filter', ('FullyQualifiedName~' + $integrationClass), '--verbosity', 'minimal')
+    }
 }
 
 $desktopPublish = Join-Path $artifactRoot '_publish\Desktop'
