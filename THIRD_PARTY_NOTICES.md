@@ -35,3 +35,5 @@ The legacy System.Memory 4.5.3 and System.Threading.Tasks.Extensions 4.5.4 packa
 Test-only dependencies (Microsoft.NET.Test.Sdk, xUnit, test runner and coverage tooling) are restored for development, not shipped in application packages. Their upstream licenses continue to apply. Project-owned source uses the owner-selected MIT license in `LICENSE`; it does not relicense external proprietary software.
 
 Review this inventory, version-specific package license files and notices again whenever a dependency or runtime version changes. No third-party license grant in this document authorizes redistribution of EPLAN or vendor/user data.
+
+Inno Setup's compiler displays a non-commercial-use banner. Its [official commercial-license guidance](https://jrsoftware.org/isorder.php) requests commercial users to purchase a license, states that purchase is not strictly required, and distinguishes running generated installers from using the compiler. Review the upstream terms for your own build context; the project MIT license does not replace them.

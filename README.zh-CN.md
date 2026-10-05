@@ -82,6 +82,7 @@ EPLAN 引用隔离在集成边界；Desktop、Reader 和 SQLite 层不引用 EPL
 - Add-In 上下文取决于 EPLAN API 可用信息；不支持的信息标记 Unavailable / Not Yet Supported，不推测。
 - 暂无生产代码签名、自动更新器或公共 EPLAN 集成 CI。
 - 不包含真实厂商回归样本，相关测试需自行提供合法本地输入。
+- Bridge 操作独占日志时，诊断包导出可能因文件占用失败；请在操作结束后重试。离线验收应与活动连接操作串行执行。
 
 ## 构建
 

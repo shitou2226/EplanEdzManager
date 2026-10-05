@@ -82,6 +82,7 @@ See [Safety](docs/SAFETY.md), [MDB import safety](docs/PARTS_DATABASE_IMPORT_SAF
 - Add-In context depends on available EPLAN API context; unsupported information is reported as Unavailable / Not Yet Supported, not inferred.
 - No production code signing, automatic updater or public EPLAN-integration CI is provided.
 - Real vendor regression fixtures are intentionally excluded; their local integration tests require independently obtained inputs.
+- Diagnostic-bundle export may fail while a Bridge operation exclusively holds a log file; retry after the operation finishes. Run offline verification separately from active connected operations.
 
 ## Build
 
