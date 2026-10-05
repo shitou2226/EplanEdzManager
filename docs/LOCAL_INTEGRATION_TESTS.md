@@ -1,0 +1,23 @@
+# Local integration tests (private prerequisites)
+
+The public repository contains no vendor fixtures or EPLAN proprietary assemblies. The default offline script excludes cases marked `Category=Integration` or `Category=LocalFixture` and does not build EPLAN-dependent projects. The remaining tests use synthetic in-memory XML/archive representations and locally generated SQLite/IPC data.
+
+## EPLAN configuration
+
+Use a valid local EPLAN P8 **2.9.4.14642** installation with the required API capability/license. Supply these environment variables locally:
+
+- `EPLAN29_API_DIR`: the installed API assembly directory (compile-time only).
+- `EPLAN29_PLATFORM_BIN_DIR`: installed Platform Bin directory.
+- `EPLAN29_VARIANT_BIN_DIR`: installed Electric P8 Variant Bin directory.
+
+Alternatively, the existing ignored `Directory.Build.props.local` may define `Eplan29ApiDir`, `Eplan29PlatformBinDir` and `Eplan29VariantBinDir`. Do not commit it or copy assemblies into the repository. net472 development additionally requires a .NET Framework 4.7.2 targeting pack.
+
+## Private EDZ regression inputs
+
+Set `EPLAN_EDZ_TEST_FIXTURE_DIR` to a local directory containing lawfully obtained regression files. The retained historical tests expect `明纬.edz`, `德力西.edz` and `欧姆龙.edz`, with the exact metadata/hash baselines in their source. Merely obtaining a file with the same name does not guarantee that baseline matches. No permission to redistribute those files is implied.
+
+As a local-only fallback, files may be placed under ignored `samples/`. Neither directory contents nor generated resources may be committed. Do not extract vendor resources to manufacture a supposedly synthetic public fixture.
+
+Enable reader/application fixture tests explicitly with `build-release.ps1 -IncludeLocalFixtures`. Enable real EPLAN Bridge export/import tests with `-IncludeEplanIntegration`; these execute installed EPLAN API operations, use isolated temporary databases and create ignored `output/` and `temp/` data. Read the import safety documentation first. The standalone `tests/EplanApi.IntegrationTests` console harness also accepts `--sample` for a local source file.
+
+Public GitHub Actions cannot execute the licensed integration tests. Passing offline tests does not claim connected-feature verification.

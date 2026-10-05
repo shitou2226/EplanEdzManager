@@ -1,0 +1,45 @@
+<Window x:Class="EplanEdzManager.Desktop.ExportPartsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Export selected parts" Width="680" Height="520"
+        WindowStartupLocation="CenterOwner" ResizeMode="CanResizeWithGrip">
+    <Grid Margin="18">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TextBlock Text="Export selected parts" FontSize="20" FontWeight="SemiBold" />
+        <Grid Grid.Row="1" Margin="0,14,0,0">
+            <Grid.ColumnDefinitions><ColumnDefinition Width="160" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+            <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /></Grid.RowDefinitions>
+            <TextBlock Text="Selected parts:" /><TextBlock x:Name="SelectedCountText" Grid.Column="1" FontWeight="SemiBold" />
+            <TextBlock Grid.Row="1" Text="Source EDZ files:" /><TextBlock x:Name="SourceCountText" Grid.Row="1" Grid.Column="1" FontWeight="SemiBold" />
+            <TextBlock Grid.Row="2" Text="Output:" /><TextBlock x:Name="OutputPathText" Grid.Row="2" Grid.Column="1" TextWrapping="Wrap" />
+        </Grid>
+        <StackPanel Grid.Row="2" Margin="0,14,0,0">
+            <TextBlock Text="✓ Sources available" Foreground="#15803D" />
+            <TextBlock Text="✓ Preferred sources resolved" Foreground="#15803D" />
+        </StackPanel>
+        <StackPanel Grid.Row="3" Margin="0,16,0,0">
+            <TextBlock x:Name="StageText" Text="Starting Bridge…" FontWeight="SemiBold" />
+            <ProgressBar x:Name="ProgressBar" Height="12" Margin="0,7,0,0" IsIndeterminate="True" />
+            <TextBlock x:Name="ProgressDetailText" Margin="0,6,0,0" TextWrapping="Wrap" Foreground="#475569" />
+            <TextBlock x:Name="ElapsedText" Margin="0,3,0,0" Foreground="#64748B" />
+        </StackPanel>
+        <Border Grid.Row="4" x:Name="ResultBorder" Visibility="Collapsed" Margin="0,15,0,0" Padding="12" BorderBrush="#CBD5E1" BorderThickness="1" CornerRadius="4">
+            <TextBlock x:Name="ResultText" TextWrapping="Wrap" />
+        </Border>
+        <TextBox Grid.Row="5" x:Name="DiagnosticsText" Margin="0,12,0,0" IsReadOnly="True" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" Visibility="Collapsed" FontFamily="Consolas" FontSize="11" />
+        <StackPanel Grid.Row="6" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,14,0,0">
+            <Button x:Name="OpenFolderButton" Content="Open Folder" Click="OpenFolder_Click" Visibility="Collapsed" MinWidth="92" />
+            <Button x:Name="DiagnosticsButton" Content="View Diagnostics" Click="Diagnostics_Click" Visibility="Collapsed" MinWidth="110" Margin="8,0,0,0" />
+            <Button x:Name="CancelButton" Content="Cancel" Click="Cancel_Click" MinWidth="82" Margin="8,0,0,0" />
+            <Button x:Name="CloseButton" Content="Close" Click="Close_Click" Visibility="Collapsed" MinWidth="82" Margin="8,0,0,0" />
+        </StackPanel>
+    </Grid>
+</Window>

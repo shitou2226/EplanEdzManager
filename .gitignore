@@ -1,0 +1,76 @@
+# Build and IDE state
+**/bin/
+**/obj/
+.vs/
+.idea/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.pdb
+
+# Private vendor inputs: never redistribute
+eplan-api/
+samples/
+fixtures-local/
+*.edz
+*.mdb
+*.erx
+!src/EplanEdzManager.Edz/
+!src/EplanEdzManager.Edz/**/
+# Keep generated content ignored even within the .Edz source-directory exception.
+**/bin/
+**/obj/
+Eplan.EplApi.*
+
+# Generated release / test / user data
+artifacts/
+output/
+temp/
+tmp/
+publish/
+installer/output/
+installer/Output/
+TestResults/
+**/TestResults/
+coverage/
+*.trx
+*.coverage
+*.db
+*.db-*
+*.sqlite3
+*.sqlite-wal
+*.sqlite-shm
+**/logs/
+**/crashes/
+**/crash-reports/
+/diagnostics/
+**/backups/
+**/LocalAppData/
+**/AppData/
+**/test-profile*/
+**/test-roots/
+*.dmp
+*.log
+
+# Machine-specific configuration and credentials
+Directory.Build.props.local
+*.local.props
+*.local.targets
+*.local.json
+*.local.config
+.env
+.env.*
+*.pem
+*.key
+*.pfx
+*.p12
+credentials*
+secrets*
+NuGet.Config.local
+
+# OS debris
+Thumbs.db
+Desktop.ini
+.DS_Store

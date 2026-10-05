@@ -1,0 +1,3 @@
+# Stable logical identity is independent of catalog row IDs
+
+Saved parts use a versioned SHA-256 identity derived from normalized manufacturer, part number, and variant; package key is used only as an explicit fallback when the primary fields are incomplete. Catalog `parts.id` values remain disposable source-instance bindings with `ON DELETE SET NULL`, while saved metadata and historical source snapshots remain durable. This prevents rescans and EDZ removal from deleting user state, permits multiple EDZ candidates for one logical part, and avoids silently merging ambiguous parts by source path or recency.

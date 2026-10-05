@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\Directory.Build.props.local" Condition="Exists('..\..\Directory.Build.props.local')" />
+
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <PlatformTarget>x64</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+    <RootNamespace>EplanEdzManager.EplanAddIn</RootNamespace>
+    <Eplan29ApiDir Condition="'$(Eplan29ApiDir)' == '' and '$(EPLAN29_API_DIR)' != ''">$(EPLAN29_API_DIR)</Eplan29ApiDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EplanEdzManager.AddIn.Protocol\EplanEdzManager.AddIn.Protocol.csproj" />
+    <Reference Include="Eplan.EplApi.AFu">
+      <HintPath>$(Eplan29ApiDir)\Eplan.EplApi.AFu.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Eplan.EplApi.Baseu">
+      <HintPath>$(Eplan29ApiDir)\Eplan.EplApi.Baseu.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Eplan.EplApi.DataModelu">
+      <HintPath>$(Eplan29ApiDir)\Eplan.EplApi.DataModelu.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Eplan.EplApi.Guiu">
+      <HintPath>$(Eplan29ApiDir)\Eplan.EplApi.Guiu.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Eplan.EplApi.HEServicesu">
+      <HintPath>$(Eplan29ApiDir)\Eplan.EplApi.HEServicesu.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+
+  <Target Name="ValidateEplan29ApiReferences" BeforeTargets="ResolveReferences">
+    <Error Condition="'$(Eplan29ApiDir)' == ''" Text="Set EPLAN29_API_DIR or create Directory.Build.props.local with Eplan29ApiDir." />
+    <Error Condition="!Exists('$(Eplan29ApiDir)\Eplan.EplApi.AFu.dll')" Text="EPLAN 2.9 API DLLs were not found under '$(Eplan29ApiDir)'." />
+  </Target>
+</Project>

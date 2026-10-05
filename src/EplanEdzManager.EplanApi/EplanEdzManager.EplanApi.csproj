@@ -1,0 +1,48 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\Directory.Build.props.local" Condition="Exists('..\..\Directory.Build.props.local')" />
+
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <PlatformTarget>x64</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+    <RootNamespace>EplanEdzManager.EplanApi</RootNamespace>
+    <Eplan29ApiDir Condition="'$(Eplan29ApiDir)' == '' and '$(EPLAN29_API_DIR)' != ''">$(EPLAN29_API_DIR)</Eplan29ApiDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="Eplan.EplApi.AFu">
+      <HintPath>$(Eplan29ApiDir)\Eplan.EplApi.AFu.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Eplan.EplApi.Baseu">
+      <HintPath>$(Eplan29ApiDir)\Eplan.EplApi.Baseu.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Eplan.EplApi.DataModelu">
+      <HintPath>$(Eplan29ApiDir)\Eplan.EplApi.DataModelu.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Eplan.EplApi.EServicesu">
+      <HintPath>$(Eplan29ApiDir)\Eplan.EplApi.EServicesu.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Eplan.EplApi.HEServicesu">
+      <HintPath>$(Eplan29ApiDir)\Eplan.EplApi.HEServicesu.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Eplan.EplApi.MasterDatau">
+      <HintPath>$(Eplan29ApiDir)\Eplan.EplApi.MasterDatau.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Eplan.EplApi.Systemu">
+      <HintPath>$(Eplan29ApiDir)\Eplan.EplApi.Systemu.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="System.Web.Extensions" />
+  </ItemGroup>
+
+  <Target Name="ValidateEplan29ApiReferences" BeforeTargets="ResolveReferences">
+    <Error Condition="'$(Eplan29ApiDir)' == ''" Text="Set EPLAN29_API_DIR or create Directory.Build.props.local with Eplan29ApiDir." />
+    <Error Condition="!Exists('$(Eplan29ApiDir)\Eplan.EplApi.HEServicesu.dll')" Text="EPLAN 2.9 API DLLs were not found under '$(Eplan29ApiDir)'." />
+  </Target>
+</Project>

@@ -1,0 +1,43 @@
+<Window x:Class="EplanEdzManager.Desktop.ProductizationWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="{DynamicResource Phase7.Environment}" Width="980" Height="720" MinWidth="820" MinHeight="600"
+        WindowStartupLocation="CenterOwner" Loaded="Window_Loaded" UseLayoutRounding="True" SnapsToDevicePixels="True">
+    <Grid Margin="14">
+        <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+        <DockPanel Margin="4,0,4,10"><TextBlock DockPanel.Dock="Right" Text="{DynamicResource Phase7.BetaLabel}" Foreground="{StaticResource AccentBrush}" FontWeight="Bold" VerticalAlignment="Center"/><StackPanel><TextBlock Text="{DynamicResource Phase7.Environment}" FontSize="22" FontWeight="SemiBold"/><TextBlock Text="{DynamicResource Phase7.LocalOnly}" Foreground="{StaticResource MutedBrush}"/></StackPanel></DockPanel>
+        <TabControl x:Name="MainTabs" Grid.Row="1">
+            <TabItem Header="{DynamicResource Phase7.TabDiagnostics}">
+                <Grid Margin="10"><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                    <WrapPanel><Button Content="{DynamicResource Phase7.RefreshCapabilities}" Click="RefreshCapabilities_Click"/><Button Content="{DynamicResource Phase7.RunDiagnostics}" Click="RunDiagnostics_Click"/><Button Content="{DynamicResource Phase7.ExportBundle}" Click="ExportBundle_Click"/><Button Content="{DynamicResource Phase7.OpenLogs}" Click="OpenLogs_Click"/></WrapPanel>
+                    <DataGrid x:Name="CapabilityGrid" Grid.Row="1" Margin="0,10,0,0" AutoGenerateColumns="False"><DataGrid.Columns><DataGridTextColumn Header="Color" Binding="{Binding Level}" Width="80"/><DataGridTextColumn Header="Capability" Binding="{Binding Name}" Width="170"/><DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="210"/><DataGridTextColumn Header="Detail" Binding="{Binding Detail}" Width="*"/></DataGrid.Columns></DataGrid>
+                    <TextBox x:Name="EnvironmentText" Grid.Row="2" Margin="0,10,0,0" MinHeight="105" MaxHeight="170" IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="{DynamicResource Phase7.TabDatabase}">
+                <Grid Margin="10"><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+                    <TextBox x:Name="DatabaseText" IsReadOnly="True" TextWrapping="Wrap" MinHeight="95"/>
+                    <WrapPanel Grid.Row="1" Margin="0,8,0,8"><Button Content="刷新" Click="RefreshDatabase_Click"/><Button Content="VACUUM" Click="Vacuum_Click"/><Button Content="Optimize" Click="Optimize_Click"/><Button Content="{DynamicResource Phase7.Health}" Click="Health_Click"/><Button Content="{DynamicResource Phase7.Rebuild}" Click="RebuildIndex_Click"/><Button Content="{DynamicResource Phase7.ResetSettings}" Click="ResetSettings_Click"/></WrapPanel>
+                    <TextBox x:Name="HealthText" Grid.Row="2" IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="{DynamicResource Phase7.TabTemporary}">
+                <Grid Margin="10"><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+                    <TextBlock Text="先执行 Dry Run。只有超过 24 小时、GUID 名称与 marker 匹配、PID 不再是 EplanBridge、且规范化路径仍位于精确 Temp Root 的直属子目录才可删除。" TextWrapping="Wrap"/>
+                    <WrapPanel Grid.Row="1" Margin="0,8"><Button Content="{DynamicResource Phase7.DryRun}" Click="ScanOrphans_Click"/><Button x:Name="CleanOrphansButton" Content="{DynamicResource Phase7.Clean}" Click="CleanOrphans_Click" IsEnabled="False"/></WrapPanel>
+                    <DataGrid x:Name="OrphanGrid" Grid.Row="2" AutoGenerateColumns="False"><DataGrid.Columns><DataGridCheckBoxColumn Header="Delete" Binding="{Binding CanDelete}" Width="55"/><DataGridTextColumn Header="Session" Binding="{Binding SessionId}" Width="190"/><DataGridTextColumn Header="Age" Binding="{Binding Age}" Width="120"/><DataGridTextColumn Header="Bytes" Binding="{Binding SizeBytes}" Width="100"/><DataGridTextColumn Header="Reason" Binding="{Binding Reason}" Width="*"/></DataGrid.Columns></DataGrid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="{DynamicResource Phase7.TabBackup}">
+                <StackPanel Margin="14"><TextBlock Text="My Library metadata backup" FontSize="18" FontWeight="SemiBold"/><TextBlock Margin="0,8" TextWrapping="Wrap" Text="备份只包含 Saved Parts、Favorite、Collection、Tag、Note 与来源元数据；不复制 EDZ、资源文件或整个索引数据库。恢复前始终 Preview。"/><WrapPanel><Button Content="{DynamicResource Phase7.Backup}" Click="Backup_Click"/><Button Content="{DynamicResource Phase7.Restore}" Click="Restore_Click"/></WrapPanel><TextBox x:Name="BackupText" Margin="0,12,0,0" IsReadOnly="True" TextWrapping="Wrap" MinHeight="180"/></StackPanel>
+            </TabItem>
+            <TabItem Header="{DynamicResource Phase7.TabAddIn}">
+                <StackPanel Margin="14"><TextBlock x:Name="AddInStatusText" FontSize="18" FontWeight="SemiBold"/><TextBlock Margin="0,12,0,0" Text="Step 1：打开 EPLAN。"/><TextBlock Text="Step 2：Options / API Add-Ins。"/><TextBlock Text="Step 3：交互选择下方 EplanEdzManager.EplanAddIn.dll。"/><TextBlock Margin="0,10,0,3" Text="Add-In DLL 实际路径" FontWeight="SemiBold"/><TextBox x:Name="AddInPathText" IsReadOnly="True"/><WrapPanel><Button Content="{DynamicResource Phase7.CopyPath}" Click="CopyAddInPath_Click"/><Button Content="{DynamicResource Phase7.OpenFolder}" Click="OpenAddInFolder_Click"/></WrapPanel><TextBlock Margin="0,12,0,0" TextWrapping="Wrap" Foreground="#92400E" Text="本 Beta 不伪造 Silent Install。DLL 存在只表示文件可用；只有真实 IPC 连接才显示 Connected。"/></StackPanel>
+            </TabItem>
+            <TabItem Header="{DynamicResource Phase7.About}">
+                <StackPanel Margin="18"><TextBlock Text="EPLAN EDZ Manager" FontSize="26" FontWeight="SemiBold"/><TextBlock Text="1.0 Beta · local-only EDZ catalog and EPLAN 2.9 integration" Foreground="{StaticResource AccentBrush}" FontWeight="Bold"/><TextBox x:Name="AboutText" Margin="0,16,0,0" IsReadOnly="True" TextWrapping="Wrap" MinHeight="280"/><WrapPanel><Button Content="{DynamicResource Phase7.Notices}" Click="OpenNotices_Click"/><Button Content="{DynamicResource Phase7.Privacy}" Click="OpenPrivacy_Click"/></WrapPanel></StackPanel>
+            </TabItem>
+        </TabControl>
+        <DockPanel Grid.Row="2" Margin="4,10,4,0"><Button DockPanel.Dock="Right" Content="{DynamicResource Phase7.Close}" IsCancel="True"/><TextBlock x:Name="StatusText" Text="Ready" VerticalAlignment="Center" Foreground="{StaticResource MutedBrush}"/></DockPanel>
+    </Grid>
+</Window>

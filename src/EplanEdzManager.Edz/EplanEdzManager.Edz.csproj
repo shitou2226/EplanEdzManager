@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>EplanEdzManager.Edz</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="SharpCompress" Version="0.50.4" />
+    <ProjectReference Include="..\EplanEdzManager.Core\EplanEdzManager.Core.csproj" />
+  </ItemGroup>
+</Project>
+

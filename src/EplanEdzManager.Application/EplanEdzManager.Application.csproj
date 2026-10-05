@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <RootNamespace>EplanEdzManager.Application</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EplanEdzManager.Core\EplanEdzManager.Core.csproj" />
+    <ProjectReference Include="..\EplanEdzManager.Edz\EplanEdzManager.Edz.csproj" />
+    <ProjectReference Include="..\EplanEdzManager.Infrastructure.Sqlite\EplanEdzManager.Infrastructure.Sqlite.csproj" />
+    <ProjectReference Include="..\EplanEdzManager.EplanBridge.Client\EplanEdzManager.EplanBridge.Client.csproj" />
+  </ItemGroup>
+</Project>

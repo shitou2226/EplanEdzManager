@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <PlatformTarget>x64</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+    <RootNamespace>EplanEdzManager.Desktop</RootNamespace>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Resources\EplanEdzManager.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Resources\EplanEdzManager.ico" />
+    <Resource Include="Resources\EplanEdzManager.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EplanEdzManager.Application\EplanEdzManager.Application.csproj" />
+    <ProjectReference Include="..\EplanEdzManager.AddIn.Protocol\EplanEdzManager.AddIn.Protocol.csproj" />
+  </ItemGroup>
+</Project>

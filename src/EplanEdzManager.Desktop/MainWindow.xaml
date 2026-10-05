@@ -1,0 +1,382 @@
+<Window x:Class="EplanEdzManager.Desktop.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="EPLAN EDZ 管理器 · 1.0 测试版" Icon="Resources/EplanEdzManager.ico" Width="1500" Height="900" MinWidth="1120" MinHeight="700"
+        Background="{StaticResource WindowBrush}" Foreground="{StaticResource TextBrush}" UseLayoutRounding="True" SnapsToDevicePixels="True"
+        Loaded="Window_Loaded" Closed="Window_Closed" PreviewKeyDown="Window_PreviewKeyDown">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolVisibility" />
+        <Style x:Key="SectionTitle" TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Margin" Value="0,4,0,7" />
+        </Style>
+        <Style x:Key="FieldLabel" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource MutedBrush}" />
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="Margin" Value="0,7,0,1" />
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Margin="4,0,4,8">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Left">
+                    <TextBlock Text="EPLAN EDZ 管理器" FontSize="22" FontWeight="SemiBold" />
+                    <TextBlock Text="EDZ 目录 + 个人精选部件库" Foreground="{StaticResource MutedBrush}" />
+                </StackPanel>
+                <TextBlock Text="1.0 测试版 · 仅本地运行" DockPanel.Dock="Right" VerticalAlignment="Center" Foreground="{StaticResource AccentBrush}" FontWeight="SemiBold" />
+            </DockPanel>
+            <Border Margin="0,8,0,0" Padding="8,6" Background="#EFF6FF" BorderBrush="#93C5FD" BorderThickness="1" CornerRadius="3">
+                <DockPanel>
+                    <Button DockPanel.Dock="Right" Content="搜索所选部件" Click="SearchEplanSelection_Click"
+                            IsEnabled="{Binding CanSearchEplanSelection}" MinWidth="155" />
+                    <StackPanel>
+                        <TextBlock Text="{Binding EplanConnectionSummary}" FontWeight="SemiBold" />
+                        <WrapPanel Margin="0,2,0,0">
+                            <TextBlock Text="{Binding EplanProjectSummary}" Margin="0,0,18,0" />
+                            <TextBlock Text="{Binding EplanSelectionSummary}" Margin="0,0,18,0" />
+                            <TextBlock Text="{Binding EplanSelectedPartsSummary}" TextTrimming="CharacterEllipsis" />
+                        </WrapPanel>
+                        <TextBlock Text="{Binding EplanInstancesSummary}" Margin="0,2,0,0" Foreground="{StaticResource MutedBrush}" />
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+        </StackPanel>
+
+        <Border Grid.Row="1" Background="{StaticResource PanelBrush}" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" Padding="7" CornerRadius="3">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                    <CheckBox Content="仅显示目录收藏" IsChecked="{Binding CatalogFavoritesOnly}" VerticalAlignment="Center" Margin="6,0" Visibility="{Binding IsCatalogMode, Converter={StaticResource BoolVisibility}}" />
+                    <Button Content="部件目录" Click="ShowCatalog_Click" />
+                    <Button Content="我的部件库" Click="ShowMyLibrary_Click" />
+                    <Button x:Name="ExportSelectedPartsButton" Content="导出所选 EDZ" Click="ExportSelectedParts_Click" IsEnabled="False" />
+                    <Button x:Name="ImportSelectedPartsButton" Content="导入所选部件至 EPLAN 数据库" Click="ImportSelectedParts_Click" IsEnabled="False" />
+                    <Button Content="扫描全部库" Command="{Binding ScanAllCommand}" />
+                    <Button Content="刷新" Command="{Binding RefreshCommand}" />
+                    <Button Content="设置" Command="{Binding ToggleSettingsCommand}" />
+                    <Button Content="{DynamicResource Phase7.Environment}" Click="Productization_Click" />
+                    <Button Content="{DynamicResource Phase7.About}" Click="About_Click" />
+                </StackPanel>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="150" />
+                        <ColumnDefinition Width="140" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox x:Name="SearchBox" Grid.Column="0" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" FontSize="14" Margin="0,0,6,0" ToolTip="部件目录：部件字段；我的部件库：部件、备注、标签、集合" />
+                    <ComboBox Grid.Column="1" ItemsSource="{Binding SearchFields}" SelectedItem="{Binding SelectedSearchField}" Margin="0,0,6,0" />
+                    <ComboBox Grid.Column="2" ItemsSource="{Binding MatchModes}" SelectedItem="{Binding SelectedMatchMode}" Margin="0,0,6,0" />
+                    <Button Grid.Column="3" Content="搜索" Command="{Binding SearchCommand}" MinWidth="72" />
+                </Grid>
+            </DockPanel>
+        </Border>
+
+        <Border Grid.Row="2" Margin="0,7,0,0" Background="#F8FAFC" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" Padding="10"
+                Visibility="{Binding IsSettingsVisible, Converter={StaticResource BoolVisibility}}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="110" />
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="125" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock Text="SQLite 数据库" VerticalAlignment="Center" />
+                <TextBox Grid.Column="1" Text="{Binding Settings.DatabasePath, UpdateSourceTrigger=PropertyChanged}" Margin="4" />
+                <TextBlock Grid.Column="2" Text="默认导出目录" VerticalAlignment="Center" Margin="10,0,0,0" />
+                <TextBox Grid.Column="3" Text="{Binding Settings.DefaultExportFolder, UpdateSourceTrigger=PropertyChanged}" Margin="4" />
+                <Button Grid.Column="4" Grid.RowSpan="2" Content="保存设置" Command="{Binding SaveSettingsCommand}" VerticalAlignment="Center" Margin="12,3,3,3" />
+                <TextBlock Grid.Row="1" Text="每页数量" VerticalAlignment="Center" />
+                <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
+                    <ComboBox Width="100" ItemsSource="{Binding PageSizes}" SelectedItem="{Binding Settings.SearchPageSize}" Margin="4" />
+                    <TextBlock Text="缩略图缓存" VerticalAlignment="Center" Margin="18,0,4,0" />
+                    <TextBox Width="75" Text="{Binding Settings.ThumbnailCacheSize, UpdateSourceTrigger=PropertyChanged}" Margin="4" />
+                </StackPanel>
+                <CheckBox Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" Content="记住窗口大小" IsChecked="{Binding Settings.RememberWindowSize}" VerticalAlignment="Center" Margin="12,0,0,0" />
+                <TextBlock Grid.Row="2" Text="默认集合" VerticalAlignment="Center" />
+                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Settings.DefaultCollection, UpdateSourceTrigger=PropertyChanged}" Margin="4" />
+                <StackPanel Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" Orientation="Horizontal">
+                    <CheckBox Content="加入库时自动收藏" IsChecked="{Binding Settings.AutoAddFavoriteWhenSaving}" VerticalAlignment="Center" Margin="12,0" />
+                    <TextBlock Text="备份目录" VerticalAlignment="Center" Margin="12,0,4,0" />
+                    <TextBox Width="250" Text="{Binding Settings.BackupFolder, UpdateSourceTrigger=PropertyChanged}" Margin="4" />
+                </StackPanel>
+                <WrapPanel Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="4" Margin="0,4,0,0">
+                    <Button Content="环境诊断与维护…" Click="Productization_Click" />
+                    <TextBlock Text="日志保留（天）" VerticalAlignment="Center" Margin="14,0,4,0" />
+                    <TextBox Width="65" Text="{Binding Settings.LogRetentionDays, UpdateSourceTrigger=PropertyChanged}" />
+                </WrapPanel>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="3" Margin="0,7,0,0" Background="#FFF7ED" BorderBrush="#F59E0B" BorderThickness="1" Padding="8"
+                Visibility="{Binding HasError, Converter={StaticResource BoolVisibility}}">
+            <DockPanel>
+                <Button DockPanel.Dock="Right" Content="关闭" Command="{Binding ClearErrorCommand}" Padding="8,2" />
+                <StackPanel>
+                    <TextBlock Text="{Binding Error.Message}" FontWeight="SemiBold" Foreground="#9A3412" />
+                    <Expander Header="技术详情" Margin="0,4,0,0">
+                        <TextBox Text="{Binding Error.TechnicalDetails, Mode=OneWay}" IsReadOnly="True" TextWrapping="Wrap" MaxHeight="130" VerticalScrollBarVisibility="Auto" />
+                    </Expander>
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <Grid Grid.Row="4" Margin="0,8,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="285" MinWidth="230" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="*" MinWidth="440" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="465" MinWidth="360" />
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" Background="{StaticResource PanelBrush}" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1">
+                <TabControl>
+                    <TabItem Header="EDZ 库">
+                        <Grid Margin="6">
+                            <Grid.RowDefinitions><RowDefinition Height="*" /><RowDefinition Height="Auto" /></Grid.RowDefinitions>
+                            <ListBox ItemsSource="{Binding Libraries}" SelectedItem="{Binding SelectedLibrary}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Margin="3,5">
+                                            <TextBlock Text="{Binding Path}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" ToolTip="{Binding Path}" />
+                                            <TextBlock Foreground="{StaticResource MutedBrush}">
+                                                <Run Text="{Binding FileCount, Mode=OneWay}" /><Run Text=" 个 EDZ  ·  " /><Run Text="{Binding PartCount, Mode=OneWay}" /><Run Text=" 个部件" />
+                                            </TextBlock>
+                                            <TextBlock Text="{Binding Status}" Foreground="#7C5A12" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                            <WrapPanel Grid.Row="1" Margin="0,6,0,0">
+                                <Button Content="添加目录" Click="AddFolder_Click" />
+                                <Button Content="重新扫描" Command="{Binding ScanSelectedCommand}" />
+                                <Button Content="打开目录" Command="{Binding OpenLibraryFolderCommand}" />
+                                <Button Content="仅移除索引" Command="{Binding RemoveLibraryCommand}" />
+                            </WrapPanel>
+                        </Grid>
+                    </TabItem>
+                    <TabItem Header="厂商">
+                        <DockPanel Margin="6">
+                            <Button DockPanel.Dock="Bottom" Content="清除厂商筛选" Command="{Binding ClearManufacturerCommand}" />
+                            <ListBox ItemsSource="{Binding Manufacturers}" SelectedItem="{Binding SelectedManufacturer}">
+                                <ListBox.ItemTemplate><DataTemplate><DockPanel Margin="3"><TextBlock Text="{Binding Count}" DockPanel.Dock="Right" Foreground="{StaticResource MutedBrush}" /><TextBlock Text="{Binding Value}" TextTrimming="CharacterEllipsis" /></DockPanel></DataTemplate></ListBox.ItemTemplate>
+                            </ListBox>
+                        </DockPanel>
+                    </TabItem>
+                    <TabItem Header="产品组">
+                        <DockPanel Margin="6">
+                            <Button DockPanel.Dock="Bottom" Content="清除分类筛选" Command="{Binding ClearProductGroupCommand}" />
+                            <ListBox ItemsSource="{Binding ProductGroups}" SelectedItem="{Binding SelectedProductGroup}">
+                                <ListBox.ItemTemplate><DataTemplate><DockPanel Margin="3"><TextBlock Text="{Binding Count}" DockPanel.Dock="Right" Foreground="{StaticResource MutedBrush}" /><TextBlock Text="{Binding Value}" TextTrimming="CharacterEllipsis" /></DockPanel></DataTemplate></ListBox.ItemTemplate>
+                            </ListBox>
+                        </DockPanel>
+                    </TabItem>
+                    <TabItem Header="诊断">
+                        <ListBox ItemsSource="{Binding Diagnostics}" Margin="6">
+                            <ListBox.ItemTemplate><DataTemplate><StackPanel Margin="3,5"><TextBlock Text="{Binding UserMessage}" Foreground="#B91C1C" FontWeight="SemiBold" /><TextBlock Text="{Binding SourcePath}" TextWrapping="Wrap" FontSize="11" /><TextBlock Text="{Binding TechnicalDetails}" TextWrapping="Wrap" Foreground="{StaticResource MutedBrush}" FontSize="11" /></StackPanel></DataTemplate></ListBox.ItemTemplate>
+                        </ListBox>
+                    </TabItem>
+                    <TabItem Header="我的部件库">
+                        <Grid Margin="6">
+                            <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="*" /><RowDefinition Height="Auto" /><RowDefinition Height="*" /><RowDefinition Height="Auto" /></Grid.RowDefinitions>
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="全部" Click="ShowMyLibrary_Click" />
+                                <Button Click="ShowFavorites_Click"><TextBlock><Run Text="收藏  " /><Run Text="{Binding FavoriteCount, Mode=OneWay}" FontWeight="Bold" /></TextBlock></Button>
+                                <Button Content="重新绑定来源" Click="RebindSources_Click" />
+                            </StackPanel>
+                            <DockPanel Grid.Row="1" Margin="2,8,2,3"><TextBlock Text="集合" FontWeight="SemiBold" /><Button DockPanel.Dock="Right" Content="＋" AutomationProperties.Name="新建集合" Padding="5,0" Click="CreateCollection_Click" /></DockPanel>
+                            <ListBox Grid.Row="2" ItemsSource="{Binding Collections}" SelectedItem="{Binding SelectedCollection}">
+                                <ListBox.ItemTemplate><DataTemplate><DockPanel Margin="3"><TextBlock Text="{Binding Count}" DockPanel.Dock="Right" Foreground="{StaticResource MutedBrush}" /><TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" /></DockPanel></DataTemplate></ListBox.ItemTemplate>
+                                <ListBox.ContextMenu><ContextMenu><MenuItem Header="重命名" Click="RenameCollection_Click" /><MenuItem Header="删除集合（仅关系）" Click="DeleteCollection_Click" /></ContextMenu></ListBox.ContextMenu>
+                            </ListBox>
+                            <DockPanel Grid.Row="3" Margin="2,8,2,3"><TextBlock Text="标签" FontWeight="SemiBold" /><Button DockPanel.Dock="Right" Content="＋" AutomationProperties.Name="新建标签" Padding="5,0" Click="CreateTag_Click" /></DockPanel>
+                            <ListBox Grid.Row="4" ItemsSource="{Binding Tags}" SelectedItem="{Binding SelectedTag}">
+                                <ListBox.ItemTemplate><DataTemplate><DockPanel Margin="3"><TextBlock Text="{Binding Count}" DockPanel.Dock="Right" Foreground="{StaticResource MutedBrush}" /><TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" /></DockPanel></DataTemplate></ListBox.ItemTemplate>
+                                <ListBox.ContextMenu><ContextMenu><MenuItem Header="重命名" Click="RenameTag_Click" /><MenuItem Header="删除标签关系" Click="DeleteTag_Click" /></ContextMenu></ListBox.ContextMenu>
+                            </ListBox>
+                            <WrapPanel Grid.Row="5" Margin="0,8,0,0"><Button Content="导出 JSON" Click="ExportLibrary_Click" /><Button Content="导入 / 预览" Click="ImportLibrary_Click" /></WrapPanel>
+                        </Grid>
+                    </TabItem>
+                </TabControl>
+            </Border>
+
+            <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
+
+            <Border Grid.Column="2" Background="{StaticResource PanelBrush}" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1">
+                <Grid>
+                    <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="*" /><RowDefinition Height="Auto" /></Grid.RowDefinitions>
+                    <Border Grid.Row="0" Background="#EFF6FF" Padding="5" Visibility="{Binding IsMyLibraryMode, Converter={StaticResource BoolVisibility}}">
+                        <DockPanel>
+                            <TextBlock DockPanel.Dock="Right" VerticalAlignment="Center"><Run Text="已选择 " /><Run Text="{Binding SelectedSavedPartCount, Mode=OneWay}" FontWeight="Bold" /><Run Text=" 个" /></TextBlock>
+                            <StackPanel Orientation="Horizontal"><Button Content="加入集合…" Click="BulkAddCollection_Click" /><Button Content="从当前集合移除" Click="BulkRemoveCollection_Click" /><Button Content="添加标签…" Click="BulkAddTag_Click" /><Button Content="移除标签…" Click="BulkRemoveTag_Click" /><Button Content="收藏" Click="BulkFavorite_Click" /><Button Content="从我的部件库移除…" Click="BulkRemove_Click" /></StackPanel>
+                        </DockPanel>
+                    </Border>
+                    <DataGrid Grid.Row="1" x:Name="PartsGrid" ItemsSource="{Binding Results}" SelectedItem="{Binding SelectedPart}" AutoGenerateColumns="False" SelectionMode="Extended" SelectionUnit="FullRow" SelectionChanged="PartsGrid_SelectionChanged" Sorting="PartsGrid_Sorting" Visibility="{Binding IsCatalogMode, Converter={StaticResource BoolVisibility}}">
+                        <DataGrid.ContextMenu><ContextMenu><MenuItem Header="加入我的部件库" Click="AddCatalogPart_Click" /><MenuItem Header="收藏" Click="FavoriteCatalogPart_Click" /><MenuItem Header="加入集合…" Click="AddCatalogToCollection_Click" /><MenuItem Header="添加标签…" Click="AddCatalogTag_Click" /><Separator /><MenuItem Header="打开来源文件夹" Command="{Binding OpenSourceFolderCommand}" /><MenuItem Header="查看资源" /></ContextMenu></DataGrid.ContextMenu>
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="☆" Width="38" CanUserSort="False"><DataGridTemplateColumn.CellTemplate><DataTemplate><Button Content="{Binding IsFavorite, Converter={StaticResource FavoriteGlyphConverter}}" Click="CatalogFavorite_Click" Padding="4,0" Foreground="#D97706" /></DataTemplate></DataGridTemplateColumn.CellTemplate></DataGridTemplateColumn>
+                            <DataGridTextColumn Header="厂商" Binding="{Binding Manufacturer}" SortMemberPath="Manufacturer" Width="120" />
+                            <DataGridTextColumn Header="部件编号" Binding="{Binding PartNumber}" SortMemberPath="PartNumber" Width="145" />
+                            <DataGridTextColumn Header="型号" Binding="{Binding TypeNumber}" SortMemberPath="TypeNumber" Width="130" />
+                            <DataGridTextColumn Header="订货号" Binding="{Binding OrderNumber}" CanUserSort="False" Width="120" />
+                            <DataGridTextColumn Header="描述" Binding="{Binding Description}" SortMemberPath="Description" Width="220" />
+                            <DataGridTextColumn Header="产品组" Binding="{Binding ProductGroup}" CanUserSort="False" Width="120" />
+                            <DataGridTextColumn Header="变体" Binding="{Binding Variant}" CanUserSort="False" Width="70" />
+                            <DataGridTextColumn Header="资源" Binding="{Binding ResourceStatus}" CanUserSort="False" Width="95" />
+                            <DataGridTextColumn Header="来源 EDZ" Binding="{Binding SourceEdz}" SortMemberPath="SourceEdz" Width="150" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <DataGrid Grid.Row="1" x:Name="MyPartsGrid" ItemsSource="{Binding SavedParts}" SelectedItem="{Binding SelectedSavedPart}" AutoGenerateColumns="False" IsReadOnly="False" Sorting="MyPartsGrid_Sorting" Visibility="{Binding IsMyLibraryMode, Converter={StaticResource BoolVisibility}}">
+                        <DataGrid.ContextMenu><ContextMenu><MenuItem Header="收藏" Click="FavoriteSavedPart_Click" /><MenuItem Header="加入集合…" Click="AddSavedToCollection_Click" /><MenuItem Header="添加标签…" Click="AddSavedTag_Click" /><MenuItem Header="保存备注" Click="SaveNote_Click" /><MenuItem Header="选择首选来源" Click="SetPreferredSource_Click" /><Separator /><MenuItem Header="从我的部件库移除…" Click="RemoveCurrentSavedPart_Click" /></ContextMenu></DataGrid.ContextMenu>
+                        <DataGrid.Columns>
+                            <DataGridCheckBoxColumn Header="✓" Binding="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="34" />
+                            <DataGridTemplateColumn Header="★" Width="38"><DataGridTemplateColumn.CellTemplate><DataTemplate><Button Content="{Binding FavoriteGlyph}" Click="SavedFavorite_Click" Padding="4,0" Foreground="#D97706" /></DataTemplate></DataGridTemplateColumn.CellTemplate></DataGridTemplateColumn>
+                            <DataGridTextColumn Header="厂商" Binding="{Binding Manufacturer}" SortMemberPath="Manufacturer" IsReadOnly="True" Width="110" />
+                            <DataGridTextColumn Header="部件编号" Binding="{Binding PartNumber}" SortMemberPath="PartNumber" IsReadOnly="True" Width="130" />
+                            <DataGridTextColumn Header="型号" Binding="{Binding TypeNumber}" SortMemberPath="TypeNumber" IsReadOnly="True" Width="120" />
+                            <DataGridTextColumn Header="描述" Binding="{Binding Description}" SortMemberPath="Description" IsReadOnly="True" Width="190" />
+                            <DataGridTextColumn Header="集合" Binding="{Binding Collections}" IsReadOnly="True" Width="140" />
+                            <DataGridTextColumn Header="标签" Binding="{Binding Tags}" IsReadOnly="True" Width="130" />
+                            <DataGridTextColumn Header="资源" Binding="{Binding ResourceStatus}" IsReadOnly="True" Width="95" />
+                            <DataGridTextColumn Header="来源数" Binding="{Binding TotalSourceCount}" IsReadOnly="True" Width="65" />
+                            <DataGridTextColumn Header="来源状态" Binding="{Binding SourceStatusText}" SortMemberPath="SourceStatus" IsReadOnly="True" Width="125" />
+                            <DataGridTextColumn Header="首选来源" Binding="{Binding PreferredSourceName}" IsReadOnly="True" Width="145" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <TextBlock Grid.Row="1" Text="没有匹配的部件。请调整搜索或先添加部件。" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{StaticResource MutedBrush}" FontSize="14" Visibility="{Binding HasNoResults, Converter={StaticResource BoolVisibility}}" />
+                    <DockPanel Grid.Row="2" Margin="7">
+                        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                            <Button Content="上一页" Command="{Binding PreviousPageCommand}" />
+                            <Button Content="下一页" Command="{Binding NextPageCommand}" />
+                        </StackPanel>
+                        <TextBlock Text="{Binding ResultSummary}" VerticalAlignment="Center" Foreground="{StaticResource MutedBrush}" />
+                    </DockPanel>
+                </Grid>
+            </Border>
+
+            <GridSplitter Grid.Column="3" Width="5" HorizontalAlignment="Stretch" />
+
+            <Border Grid.Column="4" Background="{StaticResource PanelBrush}" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1">
+                <TabControl>
+                    <TabItem Header="基本信息" Visibility="{Binding IsCatalogMode, Converter={StaticResource BoolVisibility}}">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto"><StackPanel Margin="12">
+                            <TextBlock Text="部件详情" Style="{StaticResource SectionTitle}" />
+                            <TextBlock Text="厂商" Style="{StaticResource FieldLabel}" /><TextBlock Text="{Binding SelectedPart.Manufacturer}" FontSize="14" />
+                            <TextBlock Text="部件编号" Style="{StaticResource FieldLabel}" /><TextBlock Text="{Binding SelectedPart.PartNumber}" FontSize="15" FontWeight="SemiBold" />
+                            <TextBlock Text="型号" Style="{StaticResource FieldLabel}" /><TextBlock Text="{Binding SelectedPart.TypeNumber}" />
+                            <TextBlock Text="订货号" Style="{StaticResource FieldLabel}" /><TextBlock Text="{Binding SelectedPart.OrderNumber}" />
+                            <TextBlock Text="描述" Style="{StaticResource FieldLabel}" /><TextBlock Text="{Binding SelectedPart.Description}" TextWrapping="Wrap" />
+                            <TextBlock Text="产品组 / 变体" Style="{StaticResource FieldLabel}" /><TextBlock><Run Text="{Binding SelectedPart.ProductGroup, Mode=OneWay}" /><Run Text="  /  " /><Run Text="{Binding SelectedPart.Variant, Mode=OneWay}" /></TextBlock>
+                            <TextBlock Text="包键" Style="{StaticResource FieldLabel}" /><TextBlock Text="{Binding SelectedPart.PackageKey}" TextWrapping="Wrap" />
+                            <TextBlock Text="来源 EDZ" Style="{StaticResource FieldLabel}" /><TextBlock Text="{Binding SelectedPart.EdzPath}" TextWrapping="Wrap" />
+                            <TextBlock Text="来源缺失 — 源 EDZ 已移动、删除或无法访问。" Foreground="#B91C1C" FontWeight="SemiBold" Margin="0,6,0,0" Visibility="{Binding SelectedPart.SourceMissing, Converter={StaticResource BoolVisibility}}" />
+                            <TextBlock Text="来源路径" Style="{StaticResource FieldLabel}" /><TextBlock Text="{Binding SelectedPart.RawMetadataReference}" TextWrapping="Wrap" />
+                            <Button Content="打开所在文件夹" Command="{Binding OpenSourceFolderCommand}" HorizontalAlignment="Left" Margin="0,10,0,0" />
+                            <Separator Margin="0,12" />
+                            <TextBlock Text="资源汇总" Style="{StaticResource SectionTitle}" />
+                            <WrapPanel>
+                                <TextBlock Margin="0,0,14,0"><Run Text="图片 " /><Run Text="{Binding PictureResources.Count, Mode=OneWay}" FontWeight="SemiBold" /></TextBlock>
+                                <TextBlock Margin="0,0,14,0"><Run Text="宏 " /><Run Text="{Binding MacroResources.Count, Mode=OneWay}" FontWeight="SemiBold" /></TextBlock>
+                                <TextBlock Margin="0,0,14,0"><Run Text="文档 " /><Run Text="{Binding DocumentResources.Count, Mode=OneWay}" FontWeight="SemiBold" /></TextBlock>
+                                <TextBlock><Run Text="其它 " /><Run Text="{Binding OtherResources.Count, Mode=OneWay}" FontWeight="SemiBold" /></TextBlock>
+                            </WrapPanel>
+                        </StackPanel></ScrollViewer>
+                    </TabItem>
+                    <TabItem Header="我的部件库" Visibility="{Binding IsMyLibraryMode, Converter={StaticResource BoolVisibility}}">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto"><StackPanel Margin="12">
+                            <TextBlock Text="已保存部件" Style="{StaticResource SectionTitle}" />
+                            <TextBlock Text="厂商" Style="{StaticResource FieldLabel}" /><TextBlock Text="{Binding SelectedSavedPart.Manufacturer}" />
+                            <TextBlock Text="部件编号" Style="{StaticResource FieldLabel}" /><TextBlock Text="{Binding SelectedSavedPart.PartNumber}" FontSize="15" FontWeight="SemiBold" />
+                            <TextBlock Text="稳定标识" Style="{StaticResource FieldLabel}" /><TextBlock Text="{Binding SelectedSavedPart.StableIdentity}" TextWrapping="Wrap" FontFamily="Consolas" FontSize="10" />
+                            <TextBlock Text="集合 / 标签" Style="{StaticResource FieldLabel}" /><TextBlock Text="{Binding SelectedSavedPart.Collections}" TextWrapping="Wrap" /><TextBlock Text="{Binding SelectedSavedPart.Tags}" TextWrapping="Wrap" Foreground="{StaticResource AccentBrush}" />
+                            <TextBlock Text="来源状态" Style="{StaticResource FieldLabel}" /><TextBlock Text="{Binding SelectedSavedPart.SourceStatusText}" FontWeight="SemiBold" />
+                            <TextBlock Text="备注" Style="{StaticResource FieldLabel}" />
+                            <TextBox Text="{Binding SelectedSavedPart.Note, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" MinHeight="70" TextWrapping="Wrap" />
+                            <Button Content="保存备注" Click="SaveNote_Click" HorizontalAlignment="Left" />
+                            <Separator Margin="0,10" />
+                            <DockPanel><TextBlock Text="候选来源" Style="{StaticResource SectionTitle}" /><Button DockPanel.Dock="Right" Content="设为首选来源" Click="SetPreferredSource_Click" /></DockPanel>
+                            <DataGrid ItemsSource="{Binding SourceCandidates}" SelectedItem="{Binding SelectedSourceCandidate}" AutoGenerateColumns="False" MaxHeight="220">
+                                <DataGrid.Columns><DataGridCheckBoxColumn Header="首选" Binding="{Binding IsPreferred, Mode=OneWay}" Width="70" /><DataGridTextColumn Header="来源 EDZ" Binding="{Binding SourceName}" Width="*" /><DataGridTextColumn Header="最后修改" Binding="{Binding LastModifiedText}" Width="120" /><DataGridTextColumn Header="索引时间" Binding="{Binding IndexedUtc}" Width="125" /><DataGridTextColumn Header="资源" Binding="{Binding ResourceCount}" Width="75" /><DataGridTextColumn Header="状态" Binding="{Binding Availability}" Width="75" /></DataGrid.Columns>
+                            </DataGrid>
+                            <TextBlock Text="来源文件只读；选择首选来源不会删除或改写任何 EDZ。" Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" Margin="0,6" />
+                        </StackPanel></ScrollViewer>
+                    </TabItem>
+                    <TabItem Header="图片">
+                        <Grid Margin="7">
+                            <Grid.RowDefinitions><RowDefinition Height="155" /><RowDefinition Height="*" /><RowDefinition Height="Auto" /></Grid.RowDefinitions>
+                            <ListBox ItemsSource="{Binding PictureResources}" SelectedItem="{Binding SelectedResource}">
+                                <ListBox.ItemTemplate><DataTemplate><DockPanel Margin="3"><TextBlock Text="{Binding SizeText}" DockPanel.Dock="Right" Foreground="{StaticResource MutedBrush}" /><TextBlock Text="{Binding DisplayName}" /></DockPanel></DataTemplate></ListBox.ItemTemplate>
+                            </ListBox>
+                            <Grid Grid.Row="1" Background="#F8FAFC" Margin="0,6"><Image Source="{Binding SelectedImage}" Stretch="Uniform" Margin="8" /><TextBlock Text="{Binding PreviewMessage}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{StaticResource MutedBrush}" /></Grid>
+                            <Button Grid.Row="2" Content="导出所选资源" Click="ExportResource_Click" HorizontalAlignment="Right" />
+                        </Grid>
+                    </TabItem>
+                    <TabItem Header="宏">
+                        <Grid Margin="7"><Grid.RowDefinitions><RowDefinition Height="*" /><RowDefinition Height="Auto" /></Grid.RowDefinitions><DataGrid ItemsSource="{Binding MacroResources}" SelectedItem="{Binding SelectedResource}" AutoGenerateColumns="False"><DataGrid.Columns><DataGridTextColumn Header="名称" Binding="{Binding DisplayName}" Width="*" /><DataGridTextColumn Header="路径" Binding="{Binding ArchivePath}" Width="2*" /><DataGridTextColumn Header="大小" Binding="{Binding SizeText}" Width="80" /><DataGridCheckBoxColumn Header="存在" Binding="{Binding ExistsInArchive, Mode=OneWay}" Width="55" /></DataGrid.Columns></DataGrid><Button Grid.Row="1" Content="导出所选资源" Click="ExportResource_Click" HorizontalAlignment="Right" /></Grid>
+                    </TabItem>
+                    <TabItem Header="文档">
+                        <Grid Margin="7"><Grid.RowDefinitions><RowDefinition Height="*" /><RowDefinition Height="Auto" /></Grid.RowDefinitions><DataGrid ItemsSource="{Binding DocumentResources}" SelectedItem="{Binding SelectedResource}" AutoGenerateColumns="False"><DataGrid.Columns><DataGridTextColumn Header="名称" Binding="{Binding DisplayName}" Width="*" /><DataGridTextColumn Header="路径 / URL" Binding="{Binding RawLocator}" Width="2*" /><DataGridTextColumn Header="类型" Binding="{Binding ResourceType}" Width="90" /><DataGridCheckBoxColumn Header="存在" Binding="{Binding ExistsInArchive, Mode=OneWay}" Width="55" /></DataGrid.Columns></DataGrid><Button Grid.Row="1" Content="导出所选资源" Click="ExportResource_Click" HorizontalAlignment="Right" /></Grid>
+                    </TabItem>
+                    <TabItem Header="资源">
+                        <Grid Margin="7"><Grid.RowDefinitions><RowDefinition Height="*" /><RowDefinition Height="Auto" /></Grid.RowDefinitions><DataGrid ItemsSource="{Binding AllResources}" SelectedItem="{Binding SelectedResource}" AutoGenerateColumns="False"><DataGrid.Columns><DataGridTextColumn Header="类别" Binding="{Binding Category}" Width="90" /><DataGridTextColumn Header="类型" Binding="{Binding ResourceType}" Width="90" /><DataGridTextColumn Header="名称" Binding="{Binding DisplayName}" Width="*" /><DataGridTextColumn Header="路径" Binding="{Binding ArchivePath}" Width="2*" /><DataGridTextColumn Header="大小" Binding="{Binding SizeText}" Width="75" /><DataGridCheckBoxColumn Header="存在" Binding="{Binding ExistsInArchive, Mode=OneWay}" Width="55" /></DataGrid.Columns></DataGrid><Button Grid.Row="1" Content="导出所选资源" Click="ExportResource_Click" HorizontalAlignment="Right" /></Grid>
+                    </TabItem>
+                    <TabItem Header="原始元数据">
+                        <Grid Margin="7"><Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="*" /></Grid.RowDefinitions><Button Content="加载原始元数据" Command="{Binding LoadRawMetadataCommand}" HorizontalAlignment="Left" /><TextBox Grid.Row="1" Text="{Binding RawMetadata, Mode=OneWay}" IsReadOnly="True" FontFamily="Consolas" FontSize="12" AcceptsReturn="True" TextWrapping="NoWrap" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Margin="0,6,0,0" /></Grid>
+                    </TabItem>
+                </TabControl>
+            </Border>
+        </Grid>
+
+        <Border Grid.Row="5" Margin="0,7,0,0" Background="{StaticResource PanelBrush}" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" Padding="7" Visibility="{Binding IsScanning, Converter={StaticResource BoolVisibility}}">
+            <Grid>
+                <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                <StackPanel>
+                    <DockPanel><TextBlock Text="{Binding ScanProgress.State}" FontWeight="SemiBold" /><TextBlock DockPanel.Dock="Right" Foreground="{StaticResource MutedBrush}"><Run Text="{Binding ScanProgress.CompletedFiles, Mode=OneWay}" /><Run Text=" / " /><Run Text="{Binding ScanProgress.TotalFiles, Mode=OneWay}" /></TextBlock></DockPanel>
+                    <ProgressBar Value="{Binding ScanPercent, Mode=OneWay}" Maximum="100" Height="8" Margin="0,5" />
+                    <TextBlock Text="{Binding ScanProgress.CurrentFile}" Foreground="{StaticResource MutedBrush}" TextTrimming="CharacterEllipsis" />
+                    <TextBlock Foreground="{StaticResource MutedBrush}"><Run Text="新增 " /><Run Text="{Binding ScanProgress.Added, Mode=OneWay}" /><Run Text="  更新 " /><Run Text="{Binding ScanProgress.Updated, Mode=OneWay}" /><Run Text="  未变化 " /><Run Text="{Binding ScanProgress.Unchanged, Mode=OneWay}" /><Run Text="  失败 " /><Run Text="{Binding ScanProgress.Failed, Mode=OneWay}" /><Run Text="  移除索引 " /><Run Text="{Binding ScanProgress.Removed, Mode=OneWay}" /></TextBlock>
+                </StackPanel>
+                <Button Grid.Column="1" Content="取消" Command="{Binding CancelScanCommand}" VerticalAlignment="Center" Margin="12,0,0,0" />
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="5" Margin="0,7,0,0" Background="#ECFDF5" BorderBrush="#10B981" BorderThickness="1" Padding="7" Visibility="{Binding HasScanSummary, Converter={StaticResource BoolVisibility}}">
+            <TextBlock Foreground="#065F46">
+                <Run Text="扫描完成：" FontWeight="SemiBold" />
+                <Run Text="已扫描 " /><Run Text="{Binding LastScanSummary.Scanned, Mode=OneWay}" />
+                <Run Text="  |  未变化 " /><Run Text="{Binding LastScanSummary.Unchanged, Mode=OneWay}" />
+                <Run Text="  |  已更新 " /><Run Text="{Binding LastScanSummary.Updated, Mode=OneWay}" />
+                <Run Text="  |  新增 " /><Run Text="{Binding LastScanSummary.Added, Mode=OneWay}" />
+                <Run Text="  |  已移除 " /><Run Text="{Binding LastScanSummary.Removed, Mode=OneWay}" />
+                <Run Text="  |  失败 " /><Run Text="{Binding LastScanSummary.Failed, Mode=OneWay}" />
+                <Run Text="  |  部件 " /><Run Text="{Binding LastScanSummary.PartsIndexed, Mode=OneWay}" />
+                <Run Text="  |  用时 " /><Run Text="{Binding LastScanSummary.Elapsed.TotalSeconds, Mode=OneWay, StringFormat={}{0:0.0} 秒}" />
+            </TextBlock>
+        </Border>
+
+        <StatusBar Grid.Row="6" Margin="0,7,0,0" Background="#E5E7EB">
+            <StatusBarItem><TextBlock Text="{Binding StatusText}" /></StatusBarItem>
+            <Separator />
+            <StatusBarItem><TextBlock Text="{Binding StartupMessage}" /></StatusBarItem>
+        </StatusBar>
+    </Grid>
+</Window>
