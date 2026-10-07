@@ -59,6 +59,9 @@ public sealed class SevenZipEdzArchiveReader : IEdzArchiveReader
         {
             archive?.Dispose();
             fileStream?.Dispose();
+            var reason = exception is InvalidDataException && !string.IsNullOrWhiteSpace(exception.Message)
+                ? exception.Message
+                : "The 7z EDZ container is damaged or cannot be opened.";
             return new EdzArchiveOpenResult(
                 EdzFormatKind.CorruptedArchive,
                 null,
@@ -67,7 +70,7 @@ public sealed class SevenZipEdzArchiveReader : IEdzArchiveReader
                     new DiagnosticRecord(
                         DiagnosticSeverity.Error,
                         "EDZ001",
-                        "The 7z EDZ container is damaged or cannot be opened.",
+                        reason,
                         EvidenceLevel.Confirmed,
                         exceptionType: exception.GetType().FullName)
                 });
@@ -196,7 +199,7 @@ internal static class ArchiveSafetyLimits
 {
     internal const int MaximumEntryCount = 100_000;
     internal const long MaximumSingleEntryBytes = 1024L * 1024 * 1024;
-    internal const long MaximumTotalUncompressedBytes = 4L * 1024 * 1024 * 1024;
+    internal const long MaximumTotalUncompressedBytes = 32L * 1024 * 1024 * 1024;
     internal const long CompressionRatioCheckMinimumBytes = 1024L * 1024;
     internal const long MaximumCompressionRatio = 1000;
 
@@ -224,7 +227,7 @@ internal static class ArchiveSafetyLimits
         {
             if (entry.IsDirectory) continue;
             if (entry.Size > MaximumTotalUncompressedBytes - total)
-                throw new InvalidDataException("The EDZ archive exceeds the 4 GiB total uncompressed-size safety limit.");
+                throw new InvalidDataException("The EDZ archive exceeds the 32 GiB total uncompressed-size safety limit.");
             total += entry.Size;
         }
     }

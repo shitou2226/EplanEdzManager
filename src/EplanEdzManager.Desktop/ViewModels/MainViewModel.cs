@@ -242,6 +242,57 @@ public sealed partial class MainViewModel : BindableBase, IDisposable
             "RES-EXPORT", "无法导出此资源。");
     }
 
+    public async Task<PartPreviewResult> LoadSelectedPartPreviewAsync()
+    {
+        if (_application is null) return PartPreviewResult.Unavailable("应用尚未完成初始化。");
+
+        try
+        {
+            PartDetail? detail;
+            string displayName;
+            if (IsMyLibraryMode)
+            {
+                var savedPart = SelectedSavedPart;
+                if (savedPart is null) return PartPreviewResult.Unavailable("请先选择一个部件。");
+                displayName = savedPart.PartNumber ?? savedPart.TypeNumber ?? "未命名部件";
+                detail = await _application.GetSavedPartDetailAsync(savedPart.Summary);
+            }
+            else
+            {
+                var part = SelectedPart;
+                if (part is null) return PartPreviewResult.Unavailable("请先选择一个部件。");
+                displayName = part.PartNumber ?? part.TypeNumber ?? "未命名部件";
+                detail = await _application.GetPartDetailAsync(part);
+            }
+
+            if (detail is null) return PartPreviewResult.Unavailable("当前首选来源不可用，无法读取预览资源。", displayName);
+            var resource = PartPreviewSelector.SelectPreferred(detail.Resources);
+            if (resource is null)
+            {
+                var hasMacroOrMechanical = detail.Resources.Any(item => item.Category is ResourceCategory.Macro or ResourceCategory.Mechanical);
+                var message = hasMacroOrMechanical
+                    ? "该部件含宏或 3D 数据，但 EDZ 中没有可直接显示的预览图片。当前版本不会猜测或伪造宏渲染结果。"
+                    : "该部件的 EDZ 中没有可显示的图片资源。";
+                return PartPreviewResult.Unavailable(message, displayName);
+            }
+
+            var key = resource.EdzPath + "|" + resource.ArchivePath;
+            if (!_thumbnailCache.TryGet(key, out var image) || image is null)
+            {
+                var bytes = await _application.ReadResourceAsync(resource);
+                image = ThumbnailDecoder.Decode(bytes, 1400);
+                _thumbnailCache.Add(key, image);
+            }
+            return new PartPreviewResult(image, displayName, resource,
+                "EDZ 内嵌图片；它可能是 2D 产品图，也可能是厂商提供的 3D 渲染图。");
+        }
+        catch (Exception exception)
+        {
+            Error = UserFriendlyError.FromException("PART-PREVIEW", "无法读取此部件的预览图。", exception);
+            return PartPreviewResult.Unavailable("预览读取失败：" + exception.Message);
+        }
+    }
+
     public async Task ApplySortAsync(SearchSortColumn column)
     {
         if (_sortColumn == column) _sortDirection = _sortDirection == SearchSortDirection.Ascending ? SearchSortDirection.Descending : SearchSortDirection.Ascending;
@@ -644,4 +695,14 @@ public sealed partial class MainViewModel : BindableBase, IDisposable
         _previewCancellation?.Dispose();
         _thumbnailCache.Clear();
     }
+}
+
+public sealed record PartPreviewResult(
+    BitmapImage? Image,
+    string PartDisplayName,
+    ResourceItem? Resource,
+    string Message)
+{
+    public static PartPreviewResult Unavailable(string message, string partDisplayName = "部件") =>
+        new(null, partDisplayName, null, message);
 }

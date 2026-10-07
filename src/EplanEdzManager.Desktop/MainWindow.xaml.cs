@@ -2,7 +2,9 @@ using System.ComponentModel;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using System.Windows.Media;
 using EplanEdzManager.Application;
 using EplanEdzManager.Desktop.Integration;
 using EplanEdzManager.Desktop.ViewModels;
@@ -125,6 +127,33 @@ public partial class MainWindow : Window
     private async void RebindSources_Click(object sender, RoutedEventArgs e) => await _viewModel.RebindSourcesAsync();
 
     private void PartsGrid_SelectionChanged(object sender, SelectionChangedEventArgs e) => UpdateExportButtonState();
+
+    private async void PartsGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e) =>
+        await ShowSelectedPartPreviewAsync(e);
+
+    private async void MyPartsGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e) =>
+        await ShowSelectedPartPreviewAsync(e);
+
+    private async Task ShowSelectedPartPreviewAsync(MouseButtonEventArgs e)
+    {
+        if (e.ChangedButton != MouseButton.Left || IsInsideButton(e.OriginalSource as DependencyObject)) return;
+        e.Handled = true;
+        var previousCursor = Mouse.OverrideCursor;
+        Mouse.OverrideCursor = Cursors.Wait;
+        PartPreviewResult preview;
+        try { preview = await _viewModel.LoadSelectedPartPreviewAsync(); }
+        finally { Mouse.OverrideCursor = previousCursor; }
+        new PartPreviewWindow(preview) { Owner = this }.ShowDialog();
+    }
+
+    private static bool IsInsideButton(DependencyObject? source)
+    {
+        for (var current = source; current is not null; current = VisualTreeHelper.GetParent(current))
+        {
+            if (current is ButtonBase) return true;
+        }
+        return false;
+    }
 
     private void ViewModel_PropertyChanged(object? sender, PropertyChangedEventArgs e)
     {

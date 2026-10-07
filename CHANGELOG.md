@@ -1,5 +1,27 @@
 # Changelog
 
+## 1.0.0-beta.6 — localization, resilient indexing and part preview
+
+### Added
+
+- Double-click image preview for the first supported picture embedded in a part's source EDZ.
+- Four real application screenshots covering the catalog, part preview, localized safe import and My Library source status.
+- A dedicated beta.6 release note with the verified safety and compatibility boundaries.
+
+### Fixed
+
+- Normalized recoverable EPLAN multilingual description text instead of exposing stray language markers or `??` placeholders.
+- Accepted large valid EDZ catalogs that were previously rejected by a small-entry protection rule.
+- Localized the complete eight-step safe MDB import workflow, including dynamic states, decisions, progress and errors.
+- Kept the Desktop shortcut and EPLAN Add-In launcher on the same installed application and explicit icon.
+
+### Verification
+
+- Release build completed with 0 warnings and 0 errors.
+- 171/171 tests passed, including 14 local EPLAN 2.9 Bridge integration tests.
+- Installer, Portable ZIP, offline launch, Add-In configuration and entry-point consistency smoke checks passed.
+- Only EPLAN P8 2.9.4.14642 is labeled verified; beta remains unsigned.
+
 ## 1.0.0-beta.3 — initial public-source snapshot
 
 ### Added

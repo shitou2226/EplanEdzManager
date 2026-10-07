@@ -1,6 +1,6 @@
 # Privacy and Data
 
-EPLAN EDZ Manager `1.0.0-beta.3` 默认是完全本地工具，不需要云服务，不上传数据，不包含 telemetry，也不会自动联系任何服务器。
+EPLAN EDZ Manager `1.0.0-beta.6` 默认是完全本地工具，不需要云服务，不上传数据，不包含 telemetry，也不会自动联系任何服务器。
 
 ## 本地保存的数据
 

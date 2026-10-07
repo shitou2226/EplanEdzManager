@@ -1,11 +1,11 @@
-# Clean Machine Test Checklist — EPLAN EDZ Manager 1.0.0-beta.3
+# Clean Machine Test Checklist — EPLAN EDZ Manager 1.0.0-beta.6
 
 本清单用于 Windows Sandbox 或一次性 Windows x64 VM。验收机器不得包含源码、Visual Studio、VS Build Tools、.NET SDK、NuGet CLI、Git 或开发机 NuGet cache。使用最终 `Setup.exe` 或 Portable ZIP，不得从 `bin/Debug`、`bin/Release` 启动。
 
 ## 0. Evidence and safety
 
 - [ ] 记录 Windows 版本、构建号、x64、测试用户名及是否为标准用户。
-- [ ] 用 `SHA256SUMS.txt` 核对 Setup/ZIP；文件名必须为 `1.0.0-beta.3`。
+- [ ] 用 `SHA256SUMS.txt` 核对 Setup/ZIP；文件名必须为 `1.0.0-beta.6`。
 - [ ] 保持 Microsoft Defender/SmartScreen 开启。当前为 Unsigned Beta；记录正常的未知发布者提示，不关闭 Defender、不添加安全例外。
 - [ ] 确认测试账户不是 Administrators 成员；后续安装、启动和业务操作均不使用“以管理员身份运行”。
 

@@ -5,7 +5,7 @@
   #define OutputDir "..\artifacts"
 #endif
 #ifndef ProductVersion
-  #define ProductVersion "1.0.0-beta.3"
+  #define ProductVersion "1.0.0-beta.6"
 #endif
 #ifndef ProductFileVersion
   #define ProductFileVersion "1.0.0.0"
@@ -42,8 +42,8 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Source: "{#ReleaseRoot}\EplanEdzManager\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
-Name: "{group}\EPLAN EDZ Manager"; Filename: "{app}\Desktop\EplanEdzManager.Desktop.exe"
-Name: "{autodesktop}\EPLAN EDZ Manager"; Filename: "{app}\Desktop\EplanEdzManager.Desktop.exe"; Tasks: desktopicon
+Name: "{group}\EPLAN EDZ Manager"; Filename: "{app}\Desktop\EplanEdzManager.Desktop.exe"; IconFilename: "{app}\Desktop\EplanEdzManager.Desktop.exe"
+Name: "{autodesktop}\EPLAN EDZ Manager"; Filename: "{app}\Desktop\EplanEdzManager.Desktop.exe"; IconFilename: "{app}\Desktop\EplanEdzManager.Desktop.exe"; Tasks: desktopicon
 
 [Tasks]
 Name: "desktopicon"; Description: "创建桌面快捷方式"; GroupDescription: "快捷方式："; Flags: unchecked

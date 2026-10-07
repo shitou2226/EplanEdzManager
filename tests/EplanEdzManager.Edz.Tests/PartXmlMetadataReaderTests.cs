@@ -59,6 +59,22 @@ public sealed class PartXmlMetadataReaderTests
         Assert.Null(result.Part.Description);
     }
 
+    [Theory]
+    [InlineData("??_??@Controllogix系列;", "Controllogix系列")]
+    [InlineData("zh_CN@中文描述;en_US@English description;", "中文描述")]
+    [InlineData("Plain description", "Plain description")]
+    public void Read_converts_EPLAN_multilingual_description_to_clean_Chinese_display_text(
+        string source,
+        string expected)
+    {
+        var xml = $"<partsmanagement><part P_ARTICLE_PARTNR=\"P-3\" P_ARTICLE_DESCR1=\"{source}\" /></partsmanagement>";
+
+        var result = Read(xml);
+
+        Assert.NotNull(result.Part);
+        Assert.Equal(expected, result.Part.Description);
+    }
+
     [Fact]
     public void Read_blocks_dtd_and_returns_diagnostic()
     {

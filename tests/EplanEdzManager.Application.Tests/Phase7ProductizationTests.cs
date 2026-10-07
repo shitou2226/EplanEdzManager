@@ -11,12 +11,72 @@ public sealed class Phase7ProductizationTests
     [Fact]
     public void Central_version_and_eplan_compatibility_are_explicit()
     {
-        Assert.StartsWith("1.0.0-beta.3", ProductInfo.Version, StringComparison.Ordinal);
+        Assert.StartsWith("1.0.0-beta.6", ProductInfo.Version, StringComparison.Ordinal);
         Assert.Equal(EplanCompatibility.Verified, EplanEnvironmentDetector.ClassifyCompatibility("2.9.4.14642"));
         Assert.Equal(EplanCompatibility.DetectedButUnverified, EplanEnvironmentDetector.ClassifyCompatibility("2.9.3.12345"));
         Assert.True(EplanEnvironmentDetector.IsBridgeAllowed(EplanCompatibility.Verified));
         Assert.False(EplanEnvironmentDetector.IsBridgeAllowed(EplanCompatibility.DetectedButUnverified));
         Assert.Equal(EplanCompatibility.Unsupported, EplanEnvironmentDetector.ClassifyCompatibility("2022.0.3"));
+    }
+
+    [Fact]
+    public void Desktop_UI_has_Chinese_labels_explicit_icon_and_double_click_part_preview()
+    {
+        var root = FindRepositoryRoot();
+        var mainWindow = File.ReadAllText(Path.Combine(root, "src", "EplanEdzManager.Desktop", "MainWindow.xaml"));
+        var strings = File.ReadAllText(Path.Combine(root, "src", "EplanEdzManager.Desktop", "Resources", "Strings.zh-CN.xaml"));
+        var installer = File.ReadAllText(Path.Combine(root, "installer", "EplanEdzManager.iss"));
+
+        Assert.Contains("MouseDoubleClick=\"PartsGrid_MouseDoubleClick\"", mainWindow, StringComparison.Ordinal);
+        Assert.Contains("MouseDoubleClick=\"MyPartsGrid_MouseDoubleClick\"", mainWindow, StringComparison.Ordinal);
+        Assert.DoesNotContain(">Environment Diagnostics<", strings, StringComparison.Ordinal);
+        Assert.DoesNotContain(">My Library Backup<", strings, StringComparison.Ordinal);
+        Assert.Contains("IconFilename: \"{app}\\Desktop\\EplanEdzManager.Desktop.exe\"", installer, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Import_dialog_is_fully_localized_in_Chinese_without_changing_protocol_values()
+    {
+        var root = FindRepositoryRoot();
+        var xaml = File.ReadAllText(Path.Combine(root, "src", "EplanEdzManager.Desktop", "ImportPartsWindow.xaml"));
+        var code = File.ReadAllText(Path.Combine(root, "src", "EplanEdzManager.Desktop", "ImportPartsWindow.xaml.cs"));
+
+        Assert.Contains("Title=\"安全导入到 EPLAN 部件数据库\"", xaml, StringComparison.Ordinal);
+        Assert.Contains("Text=\"导入所选部件\"", xaml, StringComparison.Ordinal);
+        Assert.Contains("Header=\"厂商\"", xaml, StringComparison.Ordinal);
+        Assert.Contains("Content=\"检查并预览\"", xaml, StringComparison.Ordinal);
+        Assert.Contains("DisplayMemberPath=\"DisplayName\"", xaml, StringComparison.Ordinal);
+        Assert.Contains("SelectedValuePath=\"Value\"", xaml, StringComparison.Ordinal);
+        Assert.Contains("LocalizeStatus", code, StringComparison.Ordinal);
+        Assert.Contains("LocalizeDifferenceField", code, StringComparison.Ordinal);
+
+        foreach (var untranslated in new[]
+                 {
+                     "Title=\"Safe import to EPLAN Parts Database\"",
+                     "Text=\"Import selected parts\"",
+                     "Text=\"Selected logical parts\"",
+                     "Header=\"Manufacturer\"",
+                     "Header=\"Differences\"",
+                     "Content=\"Inspect + Preview\"",
+                     "Content=\"IMPORT\"",
+                     "Content=\"Close\""
+                 })
+        {
+            Assert.DoesNotContain(untranslated, xaml, StringComparison.Ordinal);
+        }
+
+        foreach (var untranslated in new[]
+                 {
+                     "\"Step 2/8 — Inspecting Database\"",
+                     "\"Step 3/8 — Preview and conflict analysis\"",
+                     "\"Final confirmation — official EPLAN import\"",
+                     "\"Choose an existing validated EDZ, target MDB, and target EPLAN data root.\"",
+                     "\"Import did not complete successfully.\"",
+                     "\"Cancelling… waiting for the current official API call to return.\""
+                 })
+        {
+            Assert.DoesNotContain(untranslated, code, StringComparison.Ordinal);
+        }
     }
 
     [Theory]
@@ -173,10 +233,21 @@ public sealed class Phase7ProductizationTests
             sessionId = id.ToString("N"),
             pid,
             createdUtc,
-            appVersion = "1.0.0-beta.3",
+            appVersion = "1.0.0-beta.4",
             component = "EplanBridge"
         }));
         File.WriteAllText(Path.Combine(path, "payload.txt"), "test");
         return path;
+    }
+
+    private static string FindRepositoryRoot()
+    {
+        var directory = new DirectoryInfo(AppContext.BaseDirectory);
+        while (directory is not null)
+        {
+            if (File.Exists(Path.Combine(directory.FullName, "EplanEdzManager.sln"))) return directory.FullName;
+            directory = directory.Parent;
+        }
+        throw new DirectoryNotFoundException("Could not locate the repository root.");
     }
 }

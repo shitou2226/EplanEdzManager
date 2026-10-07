@@ -9,6 +9,36 @@ namespace EplanEdzManager.Application.Tests;
 public sealed class ApplicationServiceTests
 {
     [Fact]
+    public void Preview_selector_prefers_an_embedded_picture_and_rejects_non_image_macros()
+    {
+        var macro = new ResourceItem(1, 1, "sample.edz", "macro", "layout", "layout.ema", "items/macro/layout.ema", true, 20, 1, ResourceCategory.Macro);
+        var renderedThreeDimensional = new ResourceItem(2, 1, "sample.edz", "gmacro", "3d-preview", "3d-preview.png", "items/gmacro/3d-preview.png", true, 30, 1, ResourceCategory.Mechanical);
+        var picture = new ResourceItem(3, 1, "sample.edz", "picture", "front-picture", "front.jpg", "items/picture/front.jpg", true, 40, 1, ResourceCategory.Picture);
+
+        Assert.Same(picture, PartPreviewSelector.SelectPreferred(new[] { macro, renderedThreeDimensional, picture }));
+        Assert.Null(PartPreviewSelector.SelectPreferred(new[] { macro }));
+    }
+
+    [Fact]
+    public async Task Search_cleans_EPLAN_multilingual_markers_from_an_existing_index()
+    {
+        using var workspace = new TestWorkspace();
+        var source = Path.Combine(workspace.DirectoryPath, "legacy.edz");
+        await File.WriteAllTextAsync(source, "test placeholder");
+        var repository = new SqliteIndexRepository(workspace.DatabasePath);
+        var directoryId = await repository.AddDirectoryAsync(workspace.DirectoryPath, recursive: false);
+        var part = new IndexedPartData("AB", "1756-A10", "1756-A10", null, "??_??@Controllogix系列;", "1/26/0", "1", "1756-A10",
+            "items/partxml/1756-A10.part.xml", Array.Empty<IndexedResourceData>());
+        await repository.ReplaceFileAsync(directoryId, new IndexedEdzData(source, 10, 10, new[] { part }));
+        var app = new EdzManagerApplication(workspace.DatabasePath);
+        await app.InitializeAsync();
+
+        var result = await app.SearchAsync(new SearchRequest("1756-A10", SearchField.PartNumber, SearchMatchMode.Exact));
+
+        Assert.Equal("Controllogix系列", Assert.Single(result.Items).Description);
+    }
+
+    [Fact]
     public async Task Search_supports_pagination_manufacturer_filter_and_database_sorting()
     {
         using var workspace = new TestWorkspace();

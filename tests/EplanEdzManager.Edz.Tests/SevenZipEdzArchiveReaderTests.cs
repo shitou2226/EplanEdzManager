@@ -117,6 +117,34 @@ public sealed class SevenZipEdzArchiveReaderTests
             1, ArchiveSafetyLimits.CompressionRatioCheckMinimumBytes, 1, isDirectory: false, isEncrypted: false));
     }
 
+    [Fact]
+    public void Safety_limits_allow_large_official_style_catalogs_but_keep_a_bounded_total()
+    {
+        var sixteenGiB = Enumerable.Range(1, 16)
+            .Select(index => new EdzResourceEntry(
+                $"resource-{index}.bin",
+                1024L * 1024 * 1024,
+                128L * 1024 * 1024,
+                "LZMA2",
+                isDirectory: false,
+                isEncrypted: false,
+                isSolid: false))
+            .ToArray();
+        var overLimit = sixteenGiB
+            .Concat(Enumerable.Range(17, 17).Select(index => new EdzResourceEntry(
+                $"resource-{index}.bin",
+                1024L * 1024 * 1024,
+                128L * 1024 * 1024,
+                "LZMA2",
+                isDirectory: false,
+                isEncrypted: false,
+                isSolid: false)))
+            .ToArray();
+
+        ArchiveSafetyLimits.ValidateTotalUncompressedBytes(sixteenGiB);
+        Assert.Throws<InvalidDataException>(() => ArchiveSafetyLimits.ValidateTotalUncompressedBytes(overLimit));
+    }
+
     private static string CreateCorruptedEdz()
     {
         var directory = Path.Combine(Path.GetTempPath(), "EplanEdzManager.Tests", Guid.NewGuid().ToString("N"));

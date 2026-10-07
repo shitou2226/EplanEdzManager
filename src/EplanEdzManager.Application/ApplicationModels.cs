@@ -123,6 +123,28 @@ public sealed record ResourceItem(
     }
 }
 
+public static class PartPreviewSelector
+{
+    public static ResourceItem? SelectPreferred(IEnumerable<ResourceItem> resources)
+    {
+        ArgumentNullException.ThrowIfNull(resources);
+        return resources
+            .Where(resource => resource.CanPreview)
+            .OrderBy(resource => resource.Category == ResourceCategory.Picture ? 0 : 1)
+            .ThenBy(resource => PreviewNamePriority(resource.DisplayName))
+            .ThenBy(resource => resource.DisplayName, StringComparer.OrdinalIgnoreCase)
+            .FirstOrDefault();
+    }
+
+    private static int PreviewNamePriority(string name)
+    {
+        if (name.Contains("preview", StringComparison.OrdinalIgnoreCase)) return 0;
+        if (name.Contains("front", StringComparison.OrdinalIgnoreCase)) return 1;
+        if (name.Contains("picture", StringComparison.OrdinalIgnoreCase) || name.Contains("image", StringComparison.OrdinalIgnoreCase)) return 2;
+        return 3;
+    }
+}
+
 public sealed record ResourceSummary(
     int Pictures,
     int Macros,

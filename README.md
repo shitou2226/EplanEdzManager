@@ -1,117 +1,185 @@
+<div align="center">
+
 # EPLAN EDZ Manager
 
-[简体中文](README.zh-CN.md)
+### Fast local EDZ search, personal parts library, and official EPLAN selective export
 
-A local Windows x64 parts-library manager for EPLAN P8 2.9. Index and search EDZ libraries without modifying source files, organize a personal parts library, and use the installed EPLAN API for selective EDZ export and guarded MDB import.
+A Windows desktop tool for browsing and managing large EPLAN EDZ parts libraries<br>
+without importing thousands of unnecessary parts into EPLAN first.
 
-**Unsigned beta: 1.0.0-beta.3.** This project is an independent tool and is not affiliated with or endorsed by EPLAN GmbH & Co. KG. EPLAN is a trademark of its respective owner.
+**Independent, unofficial project · Verified with EPLAN P8 2.9.4.14642**
+
+**English** | [简体中文](README.zh-CN.md)
+
+[Download](#download) · [Demo](#demo) · [Features](#features) · [Installation](#installation) · [Known limitations](#known-limitations)
+
+</div>
+
+<p align="center">
+  <img alt="Windows x64" src="https://img.shields.io/badge/Windows-x64-0078D4">
+  <img alt=".NET 8" src="https://img.shields.io/badge/.NET-8.0-512BD4">
+  <img alt="Verified with EPLAN 2.9.4.14642" src="https://img.shields.io/badge/verified%20with-EPLAN%202.9.4.14642-E97132">
+  <a href="../../releases/tag/v1.0.0-beta.6"><img alt="Release v1.0.0-beta.6" src="https://img.shields.io/badge/release-v1.0.0--beta.6-2F81F7"></a>
+  <a href="docs/RELEASE_NOTES_1.0.0-beta.6.md#verification"><img alt="171 of 171 release-gate tests passing" src="https://img.shields.io/badge/tests-171%2F171%20passing-2EA44F"></a>
+  <a href="LICENSE"><img alt="MIT License" src="https://img.shields.io/badge/license-MIT-yellow.svg"></a>
+</p>
+
+## Preview
+
+<p align="center">
+  <img src="docs/images/main-window.png" alt="EPLAN EDZ Manager beta.6 Chinese main interface" width="95%">
+</p>
+
+Real beta.6 catalog view with normalized Chinese descriptions. This demonstration index contains 61 EDZ archives and 207,424 part records; these are local library counts, not a bundled dataset or performance guarantee.
+
+### Real beta.6 workflow captures
+
+| Double-click part preview | Fully localized safe-import wizard |
+|---|---|
+| <img src="docs/images/double-click-part-preview.png" alt="Double-click part image preview" width="100%"> | <img src="docs/images/safe-import-zh.png" alt="Chinese safe import wizard" width="100%"> |
+| Double-clicking a result opens the first supported embedded picture. It may be a 2D product drawing or a vendor-provided 3D render, depending on the EDZ contents. | The eight-step EPLAN MDB workflow is localized in Chinese and still requires a validated EDZ, an explicit target database, Preview, backup and final confirmation before any write. |
+
+| My Library source status |
+|---|
+| <img src="docs/images/my-library-source-status.png" alt="My Library missing source warning" width="100%"> |
+| Saved records remain visible if a source EDZ is moved or removed. The application reports the missing source explicitly instead of silently substituting another package. |
+
+**171/171 release-gate tests** · **SQLite FTS5** · **Offline Mode verified** · **EPLAN 2.9.4.14642 verified**
+
+See the [beta.6 release notes](docs/RELEASE_NOTES_1.0.0-beta.6.md) for the exact fixes, safety boundaries and verification scope.
+
+## Why EPLAN EDZ Manager?
+
+### Search before importing
+
+Index and search parts across multiple EDZ packages without first importing an entire vendor library into EPLAN.
+
+### Preview parts and resources
+
+Inspect part metadata, product images, EPLAN macros, and referenced resources directly from the source EDZ package.
+
+### Build your personal parts library
+
+Keep durable saved parts with favorites, tags, collections, notes, and an explicitly chosen preferred EDZ source.
+
+### Export through EPLAN itself
+
+Selected EDZ output is generated through the official EPLAN 2.9 import/export path and verified by re-import. The project does **not** implement a custom EDZ writer.
+
+## Demo
+
+<!-- Add real product demo here: docs/images/demo-search.gif -->
+
+> A short real-product demo is still needed. Follow the [20-second recording guide](docs/DEMO_GIF_GUIDE.md) to show search, preview, and favorite without exposing private data.
+
+## Download
+
+Latest beta: **v1.0.0-beta.6** for Windows x64.
+
+- [Windows x64 Installer](../../releases/download/v1.0.0-beta.6/EplanEdzManager-1.0.0-beta.6-x64-Setup.exe)
+- [Portable ZIP](../../releases/download/v1.0.0-beta.6/EplanEdzManager-1.0.0-beta.6-x64.zip)
+- [SHA-256 checksums](../../releases/download/v1.0.0-beta.6/SHA256SUMS.txt)
+- [Release notes](../../releases/tag/v1.0.0-beta.6)
+
+> This is an **unsigned beta**. Windows SmartScreen may display an unknown-publisher warning. Keep SmartScreen and antivirus protection enabled and verify the SHA-256 checksum.
+
+EPLAN is **not required** for offline EDZ indexing, search, preview, My Library, or resource export. EPLAN-dependent export/import features require a locally installed, verified EPLAN P8 `2.9.4.14642` runtime.
 
 ## Features
 
-- Read-only EDZ indexing with incremental SQLite indexing and FTS search.
-- My Parts Library: favorites, collections, tags and preferred source tracking.
-- Image/resource preview and export of existing resources.
-- Official selective EDZ export through a locally installed EPLAN API.
-- Safe MDB import with inspection, preview, explicit confirmation, backup and verification.
-- EPLAN 2.9 Add-In for local context handoff to the Desktop application.
-- Offline mode when a verified EPLAN environment is unavailable.
-
-## Screenshots
-
-Real application screenshots are not included yet. [Screenshot slots and privacy requirements](docs/images/README.md) are reserved under `docs/images/`. No mockups are presented as software screenshots.
-
-## Architecture
-
-```text
-.NET 8 Desktop (WPF x64)
-       | Application -> SQLite / read-only EDZ reader
-       |
-       +-- Named Pipe -- net472 x64 Bridge -- local EPLAN 2.9 API
-       |
-       +-- Named Pipe -- net472 x64 Add-In (inside EPLAN)
-```
-
-EPLAN references remain in the integration boundary; the Desktop, reader and SQLite layer do not reference EPLAN proprietary binaries. See [Developer Guide](docs/DEVELOPER_GUIDE.md) and the [Add-In architecture](docs/EPLAN_ADDIN_ARCHITECTURE.md).
-
-## Requirements
-
-- Windows x64.
-- Desktop and command-line release tools are self-contained .NET 8 applications; end users do not need Visual Studio, a .NET SDK, Git or NuGet.
-- Offline indexing, search, My Parts Library and resource preview/export do not require EPLAN.
-- Connected features require a valid local EPLAN installation and the required API capability/licensing. The only verified version is **EPLAN P8 2.9.4.14642**.
-- Bridge and Add-In require .NET Framework 4.7.2 or later. Missing or incompatible EPLAN environments disable connected operations safely.
+| Feature | What it does |
+|---|---|
+| EDZ Library Index | Registers library folders and builds a local, disposable catalog without modifying source EDZ files. |
+| Fast Search | Searches Part Number, Type Number, Manufacturer, Description, and full text through SQLite FTS5, exact, and contains modes. |
+| Part Preview | Reads metadata, pictures, macros and resource references on demand; double-click opens the first supported embedded picture in a dedicated viewer. |
+| My Parts Library | Saves favorites, tags, collections, notes, metadata snapshots, and preferred sources independently of catalog rescans. |
+| Multi-source Parts | Tracks multiple EDZ candidates for the same logical part without silently choosing or merging them. |
+| Selective EDZ Export | Creates a selected-parts EDZ through the official EPLAN 2.9 API path, then performs official and offline validation. |
+| Safe MDB Import | Inspects a user-selected closed Access MDB, previews conflicts, backs it up, imports through EPLAN, reopens it, verifies outcomes, and writes an audit. |
+| EPLAN Add-In | Launches or activates the desktop app and passes read-only EPLAN context through a current-user local pipe. |
+| Offline Mode | Keeps catalog, search, preview, My Library, and diagnostics available when EPLAN is absent. |
 
 ## Installation
 
-Download the Setup or Portable ZIP from [GitHub Releases](https://github.com/shitou2226/EplanEdzManager/releases); source checkout is not an installation package.
+### Installer
 
-### Setup
+Run `EplanEdzManager-1.0.0-beta.6-x64-Setup.exe`. The per-user installer does not normally require administrator rights. First Run Setup checks the environment, lets you register an EDZ library folder, and configures the local SQLite data location.
 
-Run `EplanEdzManager-1.0.0-beta.3-x64-Setup.exe`. The installer is per-user and does not require administrator rights. Application data is stored under `%LOCALAPPDATA%\EplanEdzManager`, not in the installation or EPLAN directory.
+### Portable ZIP
 
-### Portable
+Extract the ZIP to a writable folder and run `Desktop\EplanEdzManager.Desktop.exe`. The portable build intentionally stores settings, SQLite data, logs, and backups under `%LOCALAPPDATA%\EplanEdzManager`; beta.6 does not provide a separate portable data-root flag.
 
-Extract `EplanEdzManager-1.0.0-beta.3-x64.zip` and launch `EplanEdzManager\Desktop\EplanEdzManager.Desktop.exe`. Keep the complete directory layout. “Portable” refers to application distribution: persistent user data still lives in LocalAppData; temporary sessions use the user's Temp directory.
+### Requirements
 
-Verify downloads using `SHA256SUMS.txt`. This beta is unsigned: Windows may display trust warnings. Do not disable Defender, SmartScreen or other security protection. Follow your organization's software approval policy.
+- Windows x64.
+- No separately installed .NET 8 Desktop Runtime is required; Desktop and command-line tools are self-contained.
+- Bridge and Add-In features require .NET Framework 4.7.2 or later and EPLAN P8 `2.9.4.14642`.
+- EPLAN Add-In registration remains a manual action in EPLAN's official **Options / API Add-Ins** dialog. See [Add-In installation](docs/EPLAN_ADDIN_INSTALLATION.md).
+- The release does not contain or download `Eplan.EplApi.*.dll`; it resolves required proprietary assemblies from the user's local EPLAN installation.
 
-See [User Guide](docs/USER_GUIDE.md), [Troubleshooting](docs/TROUBLESHOOTING.md) and the [clean-machine checklist](docs/CLEAN_MACHINE_TEST_CHECKLIST.md).
+For the complete workflow, see the [User Guide](docs/USER_GUIDE.md) and [Troubleshooting](docs/TROUBLESHOOTING.md).
 
-## EPLAN Add-In
+## Architecture
 
-Registration is manual using EPLAN's Add-In mechanism. The installer installs the Add-In DLL and configuration, but does not write into the EPLAN installation directory or automatically register it. Follow [Add-In installation](docs/EPLAN_ADDIN_INSTALLATION.md). For portable installations, use the relative configuration example supplied beside the Add-In.
+```mermaid
+flowchart LR
+    EDZ[EDZ files] -->|read-only| Reader[EDZ Reader]
+    Reader --> Index[(SQLite FTS5 index)]
+    Index --> Desktop[.NET 8 WPF Desktop]
+    Desktop --> Library[My Parts Library]
+    Desktop -->|versioned named pipe| Bridge[.NET Framework 4.7.2 Bridge]
+    Bridge -->|local installed runtime| API[EPLAN P8 2.9 API]
+    AddIn[EPLAN P8 2.9 Add-In] -->|current-user named pipe| Desktop
+```
+
+The Desktop remains usable without EPLAN. Only the isolated x64/net472 Bridge and Add-In boundary loads the locally installed EPLAN runtime. EPLAN proprietary binaries are not distributed with this project.
 
 ## Safety
 
-- Source EDZ files are opened read-only. No custom EDZ writer is implemented.
-- Selective EDZ export uses EPLAN's official API and validates results before publishing output.
-- No direct SQL writes to EPLAN MDB databases; the local SQLite catalog is separate.
-- MDB import requires Preview / Backup / explicit confirmation / Verify. Backups are retained for recovery.
-- The tool does not perform automatic project assignment or macro placement.
-- Uninstall retains personal application data and does not remove source libraries.
-- No EPLAN DLLs, API documentation, ERX files, vendor EDZ libraries or real MDB databases are redistributed.
+- Source EDZ packages are opened read-only and are never overwritten.
+- No custom EDZ writer is used; final selected EDZ output goes through EPLAN's official API path.
+- MDB import requires inspect, Preview, explicit confirmation, fingerprint rechecks, a verified backup, official import, reopen/verification, and a local audit report.
+- Existing or conflicting parts default to **Skip**; Selective Update is disabled.
+- The application does not directly write EPLAN database tables through SQL or file patching.
+- Credentials, API keys, project data, EDZ files, and user databases are not uploaded; the application has no telemetry requirement.
 
-See [Safety](docs/SAFETY.md), [MDB import safety](docs/PARTS_DATABASE_IMPORT_SAFETY.md) and [Privacy and Data](docs/PRIVACY_AND_DATA.md).
+Read [Security and safety](SECURITY.md), [privacy and local data](docs/PRIVACY_AND_DATA.md), and the detailed [MDB import safety model](docs/PARTS_DATABASE_IMPORT_SAFETY.md).
 
-## Known Limitations
+## Known limitations
 
-- Beta software; use copies of important databases and verify results independently.
-- Only EPLAN 2.9.4.14642 is verified. Other versions are not supported as verified environments.
-- EMA/3D rendering is not implemented; existing resources may be exported without rendering.
-- Export coverage is verified for picture and EMA macro references. PDF, construction, mechanical-model and accessory resource coverage is not yet established.
-- Add-In context depends on available EPLAN API context; unsupported information is reported as Unavailable / Not Yet Supported, not inferred.
-- No production code signing, automatic updater or public EPLAN-integration CI is provided.
-- Real vendor regression fixtures are intentionally excluded; their local integration tests require independently obtained inputs.
-- Diagnostic-bundle export may fail while a Bridge operation exclusively holds a log file; retry after the operation finishes. Run offline verification separately from active connected operations.
+- The beta is unsigned; SmartScreen may show an unknown-publisher warning.
+- Only EPLAN P8 `2.9.4.14642` is verified. Other 2.9 versions are detected but EPLAN write capabilities remain disabled; EPLAN 2022+ is unsupported by this build.
+- The EPLAN Add-In must be registered manually.
+- Safe import supports only a closed, exclusively accessible EPLAN 2.9 Access MDB. SQL Server, active/locked MDBs, automatic schema migration, and Selective Update are not supported.
+- An MDB backup protects the database file but cannot roll back resource files already written by the official importer.
+- PDF, construction, mechanical-model, and accessory resource coverage is not yet complete.
+- Selected-part context is reported as `Unavailable` when the tested read-only EPLAN API routes do not expose an assigned part; the application does not guess from the active database.
+- The Desktop UI is currently primarily Chinese; the English UI translation is incomplete.
+- A separate Windows Sandbox/VM human acceptance run remains on the [clean-machine checklist](docs/CLEAN_MACHINE_TEST_CHECKLIST.md).
 
-## Build
+## Development and evidence
 
-Building source requires a Windows x64 development environment with a .NET 8-capable SDK and PowerShell 7. These are developer prerequisites, not end-user runtime requirements.
+- [Developer Guide](docs/DEVELOPER_GUIDE.md)
+- [beta.6 Release Notes](docs/RELEASE_NOTES_1.0.0-beta.6.md)
+- [Technical and safety documentation](docs/)
+- [Third-party notices](THIRD_PARTY_NOTICES.md)
 
-### Without EPLAN
+The release build rejects EPLAN proprietary DLLs, source EDZ files, databases, tests, samples, symbols, and development-only paths from the packaged output.
+
+## Build from source
+
+Source builds require Windows x64, a .NET 8-capable SDK and PowerShell 7. End users do not need these tools when using the self-contained release packages.
 
 ```powershell
 pwsh -File scripts/Test-Offline.ps1
 ```
 
-This builds Desktop and tools, then runs the EPLAN-independent test projects with real-fixture integration cases excluded. Test data is synthetic and created locally; proprietary fixtures are not downloaded or included.
+The offline path builds Desktop and tools and runs EPLAN-independent tests using synthetic data. Full local release and integration testing additionally require legally obtained EPLAN assemblies from the developer's own installation, provided only through ignored local configuration. Never copy them into the repository.
 
-### Full local release
+Before publishing source, run `pwsh -File scripts/Test-PublicReleaseGate.ps1 -RequireLicense`. See [Contributing](CONTRIBUTING.md) and [Security](SECURITY.md).
 
-Provide `EPLAN29_API_DIR` through your local environment or ignored `Directory.Build.props.local`. Point it to API assemblies from your own licensed installation; do not copy them into this repository. Install the .NET Framework 4.7.2 targeting pack for development and Inno Setup for installer compilation.
+## License and trademark
 
-```powershell
-pwsh -File build-release.ps1
-```
+Original project source is released under the [MIT License](LICENSE). Third-party components and EPLAN itself remain under their respective licenses; see [Third-party notices](THIRD_PARTY_NOTICES.md).
 
-Connected tests additionally need local Platform/Variant Bin configuration and legally obtained private fixtures. See [Local integration tests](docs/LOCAL_INTEGRATION_TESTS.md). `-IncludeEplanIntegration` explicitly opts into real EPLAN operations; `-IncludeLocalFixtures` opts into fixture-dependent reader/application tests.
-
-Before publishing source, run `pwsh -File scripts/Test-PublicReleaseGate.ps1 -RequireLicense` against the staged file list. No CI badge is claimed; public EPLAN integration tests cannot run without a licensed local EPLAN installation.
-
-## License
-
-Project-owned source is licensed under the [MIT License](LICENSE), selected by the owner. Third-party components retain their own licenses; the MIT grant does not cover proprietary EPLAN software or user data.
-
-## Third Party
-
-[Third-Party Notices](THIRD_PARTY_NOTICES.md) lists runtime dependencies and their licenses. EPLAN proprietary binaries are external prerequisites, not bundled dependencies. See [Contributing](CONTRIBUTING.md) and [Security](SECURITY.md) before sharing logs or diagnostics.
+This project is an independent tool and is not affiliated with or endorsed by EPLAN GmbH & Co. KG. EPLAN is a trademark of its respective owner.

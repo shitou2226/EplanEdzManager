@@ -1,6 +1,7 @@
 using System.Xml;
 using EplanEdzManager.Core.Diagnostics;
 using EplanEdzManager.Core.Model;
+using EplanEdzManager.Core.Text;
 
 namespace EplanEdzManager.Edz.Parts;
 
@@ -99,7 +100,7 @@ public sealed class PartXmlMetadataReader : IPartMetadataReader
                     partNumber = reader.GetAttribute("P_ARTICLE_PARTNR");
                     typeNumber = reader.GetAttribute("P_ARTICLE_TYPENR");
                     orderNumber = reader.GetAttribute("P_ARTICLE_ORDERNR");
-                    description = reader.GetAttribute("P_ARTICLE_DESCR1");
+                    description = EplanMultilingualText.ToDisplayText(reader.GetAttribute("P_ARTICLE_DESCR1"));
                     topGroup = reader.GetAttribute("P_ARTICLE_PRODUCTTOPGROUP");
                     group = reader.GetAttribute("P_ARTICLE_PRODUCTGROUP");
                     subGroup = reader.GetAttribute("P_ARTICLE_PRODUCTSUBGROUP");

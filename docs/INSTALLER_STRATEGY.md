@@ -2,7 +2,7 @@
 
 ## Decision
 
-`1.0.0-beta.3` 选择 **Inno Setup、per-user、x64、self-contained Desktop 与 Tools**。Bridge 与 Add-In 保持 `net472/x64`，依赖系统 .NET Framework 4.7.2+ 和本机 EPLAN 2.9 Runtime。
+`1.0.0-beta.6` 继续采用 **Inno Setup、per-user、x64、self-contained Desktop 与 Tools**。Bridge 与 Add-In 保持 `net472/x64`，依赖系统 .NET Framework 4.7.2+ 和本机 EPLAN 2.9 Runtime。
 
 ## Why Inno Setup
 

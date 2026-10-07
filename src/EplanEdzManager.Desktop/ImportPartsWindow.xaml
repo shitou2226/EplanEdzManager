@@ -1,7 +1,7 @@
 <Window x:Class="EplanEdzManager.Desktop.ImportPartsWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Safe import to EPLAN Parts Database" Width="1040" Height="760"
+        Title="安全导入到 EPLAN 部件数据库" Width="1040" Height="760"
         MinWidth="860" MinHeight="640" WindowStartupLocation="CenterOwner">
     <Grid Margin="16">
         <Grid.RowDefinitions>
@@ -13,57 +13,57 @@
         </Grid.RowDefinitions>
 
         <StackPanel>
-            <TextBlock Text="Import selected parts" FontSize="22" FontWeight="SemiBold" />
-            <TextBlock Text="Official EPLAN 2.9 API · explicit MDB target · Preview before write" Foreground="#475569" />
+            <TextBlock Text="导入所选部件" FontSize="22" FontWeight="SemiBold" />
+            <TextBlock Text="官方 EPLAN 2.9 API · 显式选择 MDB 目标 · 写入前预览" Foreground="#475569" />
         </StackPanel>
 
         <UniformGrid Grid.Row="1" Columns="8" Margin="0,14,0,12">
-            <Border Padding="5" Background="#E2E8F0"><TextBlock Text="1 Selected" TextAlignment="Center" /></Border>
-            <Border Padding="5" Background="#E2E8F0"><TextBlock Text="2 Database" TextAlignment="Center" /></Border>
-            <Border Padding="5" Background="#E2E8F0"><TextBlock Text="3 Preview" TextAlignment="Center" /></Border>
-            <Border Padding="5" Background="#E2E8F0"><TextBlock Text="4 Conflicts" TextAlignment="Center" /></Border>
-            <Border Padding="5" Background="#E2E8F0"><TextBlock Text="5 Backup" TextAlignment="Center" /></Border>
-            <Border Padding="5" Background="#FEF3C7"><TextBlock Text="6 Confirm" TextAlignment="Center" /></Border>
-            <Border Padding="5" Background="#DBEAFE"><TextBlock Text="7 Progress" TextAlignment="Center" /></Border>
-            <Border Padding="5" Background="#DCFCE7"><TextBlock Text="8 Result" TextAlignment="Center" /></Border>
+            <Border Padding="5" Background="#E2E8F0"><TextBlock Text="1 所选部件" TextAlignment="Center" /></Border>
+            <Border Padding="5" Background="#E2E8F0"><TextBlock Text="2 数据库" TextAlignment="Center" /></Border>
+            <Border Padding="5" Background="#E2E8F0"><TextBlock Text="3 预览" TextAlignment="Center" /></Border>
+            <Border Padding="5" Background="#E2E8F0"><TextBlock Text="4 冲突" TextAlignment="Center" /></Border>
+            <Border Padding="5" Background="#E2E8F0"><TextBlock Text="5 备份" TextAlignment="Center" /></Border>
+            <Border Padding="5" Background="#FEF3C7"><TextBlock Text="6 确认" TextAlignment="Center" /></Border>
+            <Border Padding="5" Background="#DBEAFE"><TextBlock Text="7 进度" TextAlignment="Center" /></Border>
+            <Border Padding="5" Background="#DCFCE7"><TextBlock Text="8 结果" TextAlignment="Center" /></Border>
         </UniformGrid>
 
         <Border Grid.Row="2" BorderBrush="#CBD5E1" BorderThickness="1" Padding="10">
             <Grid>
                 <Grid.ColumnDefinitions><ColumnDefinition Width="175" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
                 <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /></Grid.RowDefinitions>
-                <TextBlock Text="Selected logical parts" VerticalAlignment="Center" />
+                <TextBlock Text="所选逻辑部件" VerticalAlignment="Center" />
                 <TextBlock x:Name="SelectedCountText" Grid.Column="1" FontWeight="SemiBold" />
-                <TextBlock Grid.Row="1" Text="Validated SelectedParts.edz" VerticalAlignment="Center" />
+                <TextBlock Grid.Row="1" Text="已验证的 SelectedParts.edz" VerticalAlignment="Center" />
                 <TextBox x:Name="EdzPathText" Grid.Row="1" Grid.Column="1" Margin="4" IsReadOnly="True" />
-                <Button Grid.Row="1" Grid.Column="2" Content="Browse…" Click="BrowseEdz_Click" />
-                <TextBlock Grid.Row="2" Text="Target EPLAN 2.9 MDB" VerticalAlignment="Center" />
+                <Button Grid.Row="1" Grid.Column="2" Content="浏览…" Click="BrowseEdz_Click" />
+                <TextBlock Grid.Row="2" Text="目标 EPLAN 2.9 MDB" VerticalAlignment="Center" />
                 <TextBox x:Name="DatabasePathText" Grid.Row="2" Grid.Column="1" Margin="4" IsReadOnly="True" />
-                <Button Grid.Row="2" Grid.Column="2" Content="Browse…" Click="BrowseDatabase_Click" />
-                <TextBlock Grid.Row="3" Text="Recent target MDB" VerticalAlignment="Center" />
+                <Button Grid.Row="2" Grid.Column="2" Content="浏览…" Click="BrowseDatabase_Click" />
+                <TextBlock Grid.Row="3" Text="最近使用的目标 MDB" VerticalAlignment="Center" />
                 <ComboBox x:Name="RecentDatabasesCombo" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Margin="4"
-                          SelectionChanged="RecentDatabase_SelectionChanged" ToolTip="Shortcut only; no recent path is selected automatically." />
-                <TextBlock Grid.Row="4" Text="Target EPLAN data root" VerticalAlignment="Center" />
+                          SelectionChanged="RecentDatabase_SelectionChanged" ToolTip="仅供快捷选择；不会自动选择最近路径。" />
+                <TextBlock Grid.Row="4" Text="目标 EPLAN 数据根目录" VerticalAlignment="Center" />
                 <TextBox x:Name="MasterDataRootText" Grid.Row="4" Grid.Column="1" Margin="4" IsReadOnly="True" />
-                <Button Grid.Row="4" Grid.Column="2" Content="Browse…" Click="BrowseMasterData_Click" />
+                <Button Grid.Row="4" Grid.Column="2" Content="浏览…" Click="BrowseMasterData_Click" />
             </Grid>
         </Border>
 
         <Grid Grid.Row="3" Margin="0,12,0,0">
             <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="*" /><RowDefinition Height="Auto" /></Grid.RowDefinitions>
-            <TextBlock x:Name="StageText" Text="Choose the validated EDZ, target MDB, and target EPLAN data root." FontWeight="SemiBold" />
+            <TextBlock x:Name="StageText" Text="请选择已验证的 EDZ、目标 MDB 和目标 EPLAN 数据根目录。" FontWeight="SemiBold" />
             <StackPanel Grid.Row="1" Margin="0,8,0,8">
                 <ProgressBar x:Name="ProgressBar" Height="10" IsIndeterminate="False" />
                 <TextBlock x:Name="SummaryText" Margin="0,5,0,0" TextWrapping="Wrap" Foreground="#475569" />
             </StackPanel>
             <DataGrid x:Name="PreviewGrid" Grid.Row="2" AutoGenerateColumns="False" IsReadOnly="False" CanUserAddRows="False">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Manufacturer" Binding="{Binding Manufacturer}" IsReadOnly="True" Width="120" />
-                    <DataGridTextColumn Header="Part" Binding="{Binding PartNumber}" IsReadOnly="True" Width="150" />
-                    <DataGridTextColumn Header="Variant" Binding="{Binding Variant}" IsReadOnly="True" Width="70" />
-                    <DataGridTextColumn Header="Status" Binding="{Binding Status}" IsReadOnly="True" Width="130" />
-                    <DataGridTextColumn Header="Differences" Binding="{Binding DifferenceSummary}" IsReadOnly="True" Width="*" />
-                    <DataGridComboBoxColumn x:Name="ActionColumn" Header="Action" SelectedItemBinding="{Binding Action, UpdateSourceTrigger=PropertyChanged}" Width="115" />
+                    <DataGridTextColumn Header="厂商" Binding="{Binding Manufacturer}" IsReadOnly="True" Width="120" />
+                    <DataGridTextColumn Header="部件编号" Binding="{Binding PartNumber}" IsReadOnly="True" Width="150" />
+                    <DataGridTextColumn Header="变体" Binding="{Binding Variant}" IsReadOnly="True" Width="70" />
+                    <DataGridTextColumn Header="状态" Binding="{Binding Status}" IsReadOnly="True" Width="130" />
+                    <DataGridTextColumn Header="差异" Binding="{Binding DifferenceSummary}" IsReadOnly="True" Width="*" />
+                    <DataGridComboBoxColumn x:Name="ActionColumn" Header="操作" DisplayMemberPath="DisplayName" SelectedValuePath="Value" SelectedValueBinding="{Binding Action, UpdateSourceTrigger=PropertyChanged}" Width="125" />
                 </DataGrid.Columns>
             </DataGrid>
             <TextBox x:Name="DiagnosticsText" Grid.Row="3" Margin="0,8,0,0" MaxHeight="115" IsReadOnly="True"
@@ -71,13 +71,13 @@
         </Grid>
 
         <DockPanel Grid.Row="4" Margin="0,12,0,0">
-            <Button x:Name="CloseButton" DockPanel.Dock="Right" Content="Close" Click="Close_Click" />
-            <Button x:Name="CancelButton" DockPanel.Dock="Right" Content="Cancel" Click="Cancel_Click" Visibility="Collapsed" />
-            <Button x:Name="ImportButton" DockPanel.Dock="Right" Content="IMPORT" Click="Import_Click" IsEnabled="False" Background="#B91C1C" Foreground="White" />
-            <Button x:Name="PreviewButton" DockPanel.Dock="Right" Content="Inspect + Preview" Click="Preview_Click" />
-            <Button x:Name="OpenBackupButton" Content="Open Backup Folder" Click="OpenBackup_Click" Visibility="Collapsed" />
-            <Button x:Name="ExportReportButton" Content="Export Report" Click="ExportReport_Click" Visibility="Collapsed" />
-            <Button x:Name="SkipExistingButton" Content="Skip All Existing" Click="SkipExisting_Click" Visibility="Collapsed" />
+            <Button x:Name="CloseButton" DockPanel.Dock="Right" Content="关闭" Click="Close_Click" />
+            <Button x:Name="CancelButton" DockPanel.Dock="Right" Content="取消" Click="Cancel_Click" Visibility="Collapsed" />
+            <Button x:Name="ImportButton" DockPanel.Dock="Right" Content="确认导入" Click="Import_Click" IsEnabled="False" Background="#B91C1C" Foreground="White" />
+            <Button x:Name="PreviewButton" DockPanel.Dock="Right" Content="检查并预览" Click="Preview_Click" />
+            <Button x:Name="OpenBackupButton" Content="打开备份文件夹" Click="OpenBackup_Click" Visibility="Collapsed" />
+            <Button x:Name="ExportReportButton" Content="导出报告" Click="ExportReport_Click" Visibility="Collapsed" />
+            <Button x:Name="SkipExistingButton" Content="跳过全部已有部件" Click="SkipExisting_Click" Visibility="Collapsed" />
         </DockPanel>
     </Grid>
 </Window>

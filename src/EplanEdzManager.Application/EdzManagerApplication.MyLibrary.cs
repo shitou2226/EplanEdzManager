@@ -2,6 +2,7 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Text.Json;
 using EplanEdzManager.Core.Identity;
+using EplanEdzManager.Core.Text;
 using EplanEdzManager.EplanBridge.Client;
 using EplanEdzManager.EplanBridge.Protocol;
 using EplanEdzManager.Infrastructure.Sqlite;
@@ -284,7 +285,7 @@ public sealed partial class EdzManagerApplication
     }
 
     private static SavedPartSummary MapSavedPart(SavedPartSearchResult row) => new(row.Id, row.StableIdentity, row.Manufacturer,
-        row.PartNumber, row.Variant, row.TypeNumber, row.OrderNumber, row.Description, row.ProductGroup, row.PackageKey,
+        row.PartNumber, row.Variant, row.TypeNumber, row.OrderNumber, EplanMultilingualText.ToDisplayText(row.Description), row.ProductGroup, row.PackageKey,
         row.Note, row.Favorite, row.AvailableSourceCount, row.TotalSourceCount, row.PreferredSourceId, row.PreferredEdzPath,
         row.PreferredCurrentPartId, row.PreferredRawMetadataReference, row.PreferredResourceCount, row.PreferredExistingResourceCount,
         row.Collections, row.Tags, (MyLibrarySourceStatus)row.SourceState, row.UpdatedUtc);

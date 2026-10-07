@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using EplanEdzManager.Core.Text;
 using EplanEdzManager.Infrastructure.Sqlite;
 
 namespace EplanEdzManager.Application;
@@ -252,7 +253,7 @@ public sealed partial class EdzManagerApplication
 
     private static PartSummary MapPart(PartSearchResult row) => new(
         row.Id, row.EdzPath, row.Manufacturer, row.PartNumber, row.TypeNumber, row.OrderNumber,
-        row.Description, row.ProductGroup, row.Variant, row.PackageKey, row.RawMetadataReference,
+        EplanMultilingualText.ToDisplayText(row.Description), row.ProductGroup, row.Variant, row.PackageKey, row.RawMetadataReference,
         row.ResourceCount, row.ExistingResourceCount, row.SavedPartId, row.IsFavorite);
 
     private static ResourceItem MapResource(IndexedResource row) => new(

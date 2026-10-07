@@ -14,7 +14,7 @@ Desktop 不直接引用 Infrastructure；主依赖保持 `Desktop -> Application
 
 ## Versioning
 
-`Version.props` 是唯一产品版本源。当前 SemVer 为 `1.0.0-beta.3`，Assembly/File Version 为 `1.0.0.0`。发布脚本把当前 Git commit 作为 `SourceRevisionId` 注入 InformationalVersion；Installer、报告和 About 使用同一版本。
+`Version.props` 是唯一产品版本源。当前 SemVer 为 `1.0.0-beta.6`，Assembly/File Version 为 `1.0.0.0`。发布脚本把当前 Git commit 作为 `SourceRevisionId` 注入 InformationalVersion；Installer、报告和 About 使用同一版本。
 
 ## Local EPLAN paths
 
@@ -25,10 +25,12 @@ Desktop 不直接引用 Infrastructure；主依赖保持 `Desktop -> Application
 ## Build and tests
 
 ```powershell
-pwsh -File scripts/Test-Offline.ps1
+dotnet restore EplanEdzManager.sln
+dotnet build EplanEdzManager.sln -c Release --no-restore
+dotnet test EplanEdzManager.sln -c Release --no-build
 ```
 
-该入口不构建 EPLAN-dependent 项目，不要求专有 DLL 或真实样本。全 Solution / release 构建需要自行提供 EPLAN API 目录及 net472 targeting pack。`build-release.ps1` 默认运行不依赖真实样本的 regular tests、self-contained Desktop publish、Bridge/Add-In build、artifact collection、EPLAN DLL exclusion、portable ZIP、Inno installer、可选 installer smoke 和 SHA-256。`-IncludeLocalFixtures` 启用私有样本测试；`-IncludeEplanIntegration` 才运行真实 EPLAN Bridge integration tests。配置方法见 `LOCAL_INTEGRATION_TESTS.md`。
+`build-release.ps1` 默认运行 fast/regular tests、self-contained Desktop publish、Bridge/Add-In build、五层 artifact collection、EPLAN DLL exclusion、portable ZIP、Inno installer、可选 installer smoke 和 SHA-256。`-IncludeEplanIntegration` 才运行耗时的真实 EPLAN Bridge integration tests。
 
 ## Release layout
 
