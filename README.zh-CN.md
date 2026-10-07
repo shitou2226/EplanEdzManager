@@ -2,16 +2,16 @@
 
 # EPLAN EDZ Manager
 
-### 本地快速检索 EDZ、管理个人部件库，并通过 EPLAN 官方能力选择性导出
+### Windows 下的 EDZ 部件库搜索和整理工具
 
-一款 Windows 桌面工具，用于浏览和管理大型 EPLAN EDZ 部件库，<br>
-无需先把成千上万个不需要的部件全部导入 EPLAN。
+先在本地查 EDZ，再把真正需要的部件交给 EPLAN 处理，<br>
+不用为了找几个部件先导入整套厂商库。
 
 **独立、非官方项目 · 已在 EPLAN P8 2.9.4.14642 上验证**
 
 [English](README.md) | **简体中文**
 
-[下载](#下载) · [演示](#演示) · [功能](#功能) · [安装](#安装) · [已知限制](#已知限制)
+[下载](#下载) · [界面](#界面) · [功能](#功能) · [安装](#安装) · [已知限制](#已知限制)
 
 </div>
 
@@ -20,57 +20,41 @@
   <img alt=".NET 8" src="https://img.shields.io/badge/.NET-8.0-512BD4">
   <img alt="已在 EPLAN 2.9.4.14642 上验证" src="https://img.shields.io/badge/verified%20with-EPLAN%202.9.4.14642-E97132">
   <a href="../../releases/tag/v1.0.0-beta.6"><img alt="Release v1.0.0-beta.6" src="https://img.shields.io/badge/release-v1.0.0--beta.6-2F81F7"></a>
-  <a href="docs/RELEASE_NOTES_1.0.0-beta.6.md#验证结果"><img alt="171/171 发布门禁测试通过" src="https://img.shields.io/badge/tests-171%2F171%20passing-2EA44F"></a>
+  <a href="docs/RELEASE_NOTES_1.0.0-beta.6.md"><img alt="171/171 发布门禁测试通过" src="https://img.shields.io/badge/tests-171%2F171%20passing-2EA44F"></a>
   <a href="LICENSE"><img alt="MIT License" src="https://img.shields.io/badge/license-MIT-yellow.svg"></a>
 </p>
 
-## 软件预览
+## 界面
 
 <p align="center">
   <img src="docs/images/main-window.png" alt="EPLAN EDZ Manager beta.6 中文主界面" width="95%">
 </p>
 
-真实 beta.6 目录界面，中文描述已完成规范化显示。截图中的本地演示索引包含 61 个 EDZ、207,424 条部件记录；这是用户本机目录统计，不代表软件内置数据或性能承诺。
+这是 beta.6 在本机部件库中的运行界面。截图里共有 61 个 EDZ、207,424 条部件记录；这些数据来自本地目录，软件本身不附带部件库。
 
-### beta.6 真实操作截图
+### 这次修改后的几个界面
 
 | 双击查看部件图片 | 已汉化的安全导入向导 |
 |---|---|
 | <img src="docs/images/double-click-part-preview.png" alt="双击打开部件图片预览" width="100%"> | <img src="docs/images/safe-import-zh.png" alt="中文安全导入向导" width="100%"> |
-| 双击结果可打开首个受支持的内嵌图片。具体画面取决于 EDZ 内容，可能是 2D 产品图，也可能是厂商提供的 3D 渲染图。 | EPLAN MDB 八步导入界面已完整汉化；写入前仍必须选择已验证 EDZ、明确的目标数据库，完成预览、备份和最终确认。 |
+| 双击部件行会打开 EDZ 里的第一张可预览图片。它可能是 2D 产品图，也可能是厂家放进去的 3D 效果图。 | EPLAN MDB 八步导入窗口已经汉化。选择目标数据库后，仍要经过预览、备份和确认才会写入。 |
 
 | 我的部件库来源状态 |
 |---|
 | <img src="docs/images/my-library-source-status.png" alt="我的部件库来源缺失提示" width="100%"> |
-| 源 EDZ 被移动或删除后，已保存记录仍会保留，并明确显示“来源缺失”，不会静默替换为其它包。 |
+| 源 EDZ 被移动或删除后，收藏记录还在，右侧会直接提示“来源缺失”，不会换成另一个同名包。 |
 
 **发布门禁测试 171/171** · **SQLite FTS5** · **Offline Mode 已验证** · **EPLAN 2.9.4.14642 已验证**
 
-本次修复范围、安全边界和验证记录见 [beta.6 发布说明](docs/RELEASE_NOTES_1.0.0-beta.6.md)。
+具体改动和测试结果见 [beta.6 发布说明](docs/RELEASE_NOTES_1.0.0-beta.6.md)。
 
-## 为什么使用 EPLAN EDZ Manager？
+## 它能做什么
 
-### 导入前先搜索
-
-先对多个 EDZ 包中的部件建立本地索引并搜索，不必把整个厂商部件库预先导入 EPLAN。
-
-### 先预览部件与资源
-
-直接从源 EDZ 按需查看部件元数据、产品图片、EPLAN 宏及已记录的资源引用。
-
-### 建立自己的常用部件库
-
-长期保存常用部件，可维护收藏、标签、集合、备注，并显式选择首选 EDZ 来源；目录重扫不会删除这些个人数据。
-
-### 通过 EPLAN 自身能力导出
-
-选择性 EDZ 通过 EPLAN 2.9 官方导入/导出路径生成，并进行官方回读验证。本项目**没有自行实现 EDZ Writer**。
-
-## 演示
-
-<!-- 在这里加入真实软件演示：docs/images/demo-search.gif -->
-
-> 这里还需要补一段真实软件操作演示。请按[20 秒录制指南](docs/DEMO_GIF_GUIDE.md)展示搜索、预览和收藏，并避免暴露私人数据。
+- 给多个 EDZ 建本地索引，按部件号、型号、厂商或描述搜索。
+- 查看部件元数据、图片、EPLAN 宏和其它资源引用。
+- 把常用部件存进“我的部件库”，再加收藏、标签、集合和备注。重新扫描目录不会删掉这些内容。
+- 同一部件来自多个 EDZ 时保留全部来源，由用户决定用哪个。
+- 需要导出时调用 EPLAN 2.9 的官方导入/导出流程；项目没有自己编写 EDZ 文件。
 
 ## 下载
 

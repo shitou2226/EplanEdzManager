@@ -11,7 +11,7 @@ without importing thousands of unnecessary parts into EPLAN first.
 
 **English** | [简体中文](README.zh-CN.md)
 
-[Download](#download) · [Demo](#demo) · [Features](#features) · [Installation](#installation) · [Known limitations](#known-limitations)
+[Download](#download) · [Screenshots](#screenshots) · [Features](#features) · [Installation](#installation) · [Known limitations](#known-limitations)
 
 </div>
 
@@ -20,19 +20,19 @@ without importing thousands of unnecessary parts into EPLAN first.
   <img alt=".NET 8" src="https://img.shields.io/badge/.NET-8.0-512BD4">
   <img alt="Verified with EPLAN 2.9.4.14642" src="https://img.shields.io/badge/verified%20with-EPLAN%202.9.4.14642-E97132">
   <a href="../../releases/tag/v1.0.0-beta.6"><img alt="Release v1.0.0-beta.6" src="https://img.shields.io/badge/release-v1.0.0--beta.6-2F81F7"></a>
-  <a href="docs/RELEASE_NOTES_1.0.0-beta.6.md#verification"><img alt="171 of 171 release-gate tests passing" src="https://img.shields.io/badge/tests-171%2F171%20passing-2EA44F"></a>
+  <a href="docs/RELEASE_NOTES_1.0.0-beta.6.md"><img alt="171 of 171 release-gate tests passing" src="https://img.shields.io/badge/tests-171%2F171%20passing-2EA44F"></a>
   <a href="LICENSE"><img alt="MIT License" src="https://img.shields.io/badge/license-MIT-yellow.svg"></a>
 </p>
 
-## Preview
+## Screenshots
 
 <p align="center">
   <img src="docs/images/main-window.png" alt="EPLAN EDZ Manager beta.6 Chinese main interface" width="95%">
 </p>
 
-Real beta.6 catalog view with normalized Chinese descriptions. This demonstration index contains 61 EDZ archives and 207,424 part records; these are local library counts, not a bundled dataset or performance guarantee.
+Beta.6 catalog view with normalized Chinese descriptions. The screenshot shows a local library with 61 EDZ archives and 207,424 part records; the application does not include this data.
 
-### Real beta.6 workflow captures
+### Updated beta.6 screens
 
 | Double-click part preview | Fully localized safe-import wizard |
 |---|---|
@@ -65,12 +65,6 @@ Keep durable saved parts with favorites, tags, collections, notes, and an explic
 ### Export through EPLAN itself
 
 Selected EDZ output is generated through the official EPLAN 2.9 import/export path and verified by re-import. The project does **not** implement a custom EDZ writer.
-
-## Demo
-
-<!-- Add real product demo here: docs/images/demo-search.gif -->
-
-> A short real-product demo is still needed. Follow the [20-second recording guide](docs/DEMO_GIF_GUIDE.md) to show search, preview, and favorite without exposing private data.
 
 ## Download
 

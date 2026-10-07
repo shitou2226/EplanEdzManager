@@ -1,5 +1,20 @@
 # Public Release Report
 
+## 1.0.0-beta.6 update
+
+**PASS** — beta.6 was built from the isolated public clone and published on 2026-10-07.
+
+- Source/tag commit: `9f409d679942ed3e0b9ac3840ae698ab96d0f282`.
+- Release: https://github.com/shitou2226/EplanEdzManager/releases/tag/v1.0.0-beta.6 (Pre-release, not draft).
+- Full gate: 171/171 tests passed, including 14 local EPLAN 2.9 Bridge integration tests; build completed with 0 warnings and 0 errors.
+- Public-source gate: 211 tracked files checked; no forbidden binaries, credentials, development-machine paths, EDZ or MDB files were found.
+- Private EDZ fixtures were supplied only through the process-local `EPLAN_EDZ_TEST_FIXTURE_DIR` setting and were not copied into the public clone or release assets.
+- Four user-provided product screenshots were added under `docs/images`: main catalog, double-click picture preview, localized MDB import and missing-source status.
+- Setup SHA-256: `66C887A7ABF39EE2D1643789B33D3201E414441C57421713E23DC80797AF33F1` (105,267,922 bytes).
+- Portable ZIP SHA-256: `1E58458091556F04CB1A7ED8C7E50248E64B07F7D3103DC359410353FC047F35` (149,983,167 bytes).
+- GitHub reported matching digests for both uploaded assets. The release also includes the 214-byte `SHA256SUMS.txt`.
+- The beta.3 release and tag were left unchanged. The private development branch was not pushed.
+
 ## Status
 
 **PASS** — independent Public repository, clean source history, source push, beta Pre-release, exact asset upload and fresh GitHub-clone verification completed on 2026-10-05.

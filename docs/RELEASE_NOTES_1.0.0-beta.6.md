@@ -3,22 +3,23 @@
 发布日期：2026-10-07
 状态：未签名 Beta，Windows x64
 
-## 本次更新
+这版主要处理界面中文、描述乱码和部件预览。安装包与 Portable ZIP 都已重新构建。
 
-- 再次完成中文界面校正，统一主窗口、目录、详情区和资源相关文本。
-- 修复部分 EPLAN 多语言描述中出现的 `??`、语言标记残留和可恢复文本显示异常。
-- 修复大型但有效的 EDZ 目录可能被小型条目保护规则误判的问题。
-- 新增双击部件打开图片预览：显示 EDZ 中首个受支持的内嵌图片，可能是 2D 产品图，也可能是厂商预先提供的 3D 渲染图。
-- “导入所选部件至 EPLAN 数据库”八步向导完成中文化，包括路径选择、状态、差异、操作、进度、错误和结果提示。
-- 桌面快捷方式与 EPLAN Add-In 入口统一指向同一安装版本，并显式使用应用图标。
+## 改了什么
 
-## 安全边界
+- 主窗口、目录、详情区和资源页的中文重新检查了一遍。
+- EPLAN 多语言字段里的 `??` 和语言标记现在会在显示前清理，能恢复的中文会正常显示。
+- “导入所选部件至 EPLAN 数据库”八步窗口已汉化，状态、差异、进度和错误提示也改成了中文。
+- 放宽了 EDZ 大型资源的单项限制，避免把正常的大型厂商库当成异常压缩包；总大小限制仍然保留。
+- 双击部件行可以看 EDZ 里的图片。程序取第一张支持的图片，可能是 2D 产品图，也可能是厂家提供的 3D 效果图。
+- 桌面快捷方式和 EPLAN Add-In 使用同一套 beta.6 文件，快捷方式图标也已补上。
 
-- 图片预览只读取 EDZ 内已有资源；本版本不提供实时 EMA 或 3D 模型渲染器。
-- 源 EDZ 继续只读打开，不会被覆盖。
-- MDB 导入仍要求明确选择已关闭的目标 MDB，并经过检查、预览、备份、最终确认和导入后验证。
-- 已存在或冲突部件默认跳过；本版本仍不提供 Selective Update。
-- 发布包不包含 `Eplan.EplApi.*.dll`、EDZ、MDB、项目文件或用户索引数据。
+## 目前仍有的限制
+
+- 图片窗口只显示 EDZ 里已经存在的图片，不会实时渲染 EMA 或 3D 模型。
+- 只有 EPLAN `2.9.4.14642` 做过完整验证。
+- MDB 导入只支持已关闭、可独占访问的 EPLAN 2.9 Access MDB；已有或冲突部件默认跳过。
+- 安装包未签名，SmartScreen 可能提示“未知发布者”。
 
 ## 软件展示
 
@@ -27,13 +28,13 @@
 - [中文安全导入向导](images/safe-import-zh.png)
 - [我的部件库来源缺失状态](images/my-library-source-status.png)
 
-## Verification
+## 测试情况
 
-- Release build：0 warnings / 0 errors。
-- 自动化测试：171/171 通过，其中包含 14 个本机 EPLAN 2.9 Bridge 集成测试。
-- 安装器、Portable ZIP、离线启动、UTF-8 Add-In 配置、桌面入口一致性和卸载烟雾测试通过。
-- 已验证 EPLAN 版本：`2.9.4.14642`；其它 2.9.x 不标记为已验证，EPLAN 2022+ 不受此构建支持。
+- Release 构建：0 warnings / 0 errors。
+- 自动化测试：171/171，其中 14 项使用本机 EPLAN 2.9 Bridge。
+- 安装、卸载、Portable ZIP、离线启动、Add-In 配置和桌面入口都跑过冒烟测试。
+- 发布包检查过，不含 `Eplan.EplApi.*.dll`、EDZ、MDB、项目文件或用户索引数据。
 
-## 下载提醒
+## 下载
 
-这是未签名 Beta。请保留 Windows Defender、SmartScreen 和其它安全保护，并使用 GitHub Release 同时提供的 `SHA256SUMS.txt` 核对下载文件。
+安装版、Portable ZIP 和 `SHA256SUMS.txt` 都在 [v1.0.0-beta.6 Release](https://github.com/shitou2226/EplanEdzManager/releases/tag/v1.0.0-beta.6)。建议保留 Windows Defender 和 SmartScreen，并在安装前核对 SHA-256。
