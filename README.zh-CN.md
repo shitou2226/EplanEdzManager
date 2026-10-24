@@ -167,3 +167,8 @@ pwsh -File scripts/Test-Offline.ps1
 本项目原创源码按 [MIT License](LICENSE) 发布。第三方组件与 EPLAN 本身仍遵循各自许可证，详见[第三方声明](THIRD_PARTY_NOTICES.md)。
 
 本项目是独立工具，与 EPLAN GmbH & Co. KG 无隶属、赞助或背书关系。EPLAN 是其各自权利人的商标。
+
+
+## 试用与相关项目
+
+[试用步骤](docs/try-it.md) · [反馈问题](https://github.com/shitou2226/EplanEdzManager/issues/new/choose) · [其他电气与工业软件项目](docs/related-projects.md)

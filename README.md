@@ -177,3 +177,8 @@ Before publishing source, run `pwsh -File scripts/Test-PublicReleaseGate.ps1 -Re
 Original project source is released under the [MIT License](LICENSE). Third-party components and EPLAN itself remain under their respective licenses; see [Third-party notices](THIRD_PARTY_NOTICES.md).
 
 This project is an independent tool and is not affiliated with or endorsed by EPLAN GmbH & Co. KG. EPLAN is a trademark of its respective owner.
+
+
+## Try it and share feedback
+
+[Trial steps](docs/try-it.md) · [Report an issue](https://github.com/shitou2226/EplanEdzManager/issues/new/choose) · [Related projects](docs/related-projects.md)

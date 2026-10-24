@@ -1,0 +1,39 @@
+name: 使用问题与兼容性反馈
+description: 说明实际操作、软件版本和遇到的结果。
+title: "[反馈] "
+body:
+  - type: markdown
+    attributes:
+      value: 请用最小示例说明问题。不要提交账号、密钥、个人路径、企业图纸、数据库或厂商授权文件。
+  - type: input
+    id: version
+    attributes:
+      label: 程序版本与 Windows 版本
+      placeholder: 例如程序版本、Windows 10/11；相关 IDE 请写完整版本
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 操作步骤
+      description: 从打开程序开始，列出能重复出现问题的步骤。
+    validations:
+      required: true
+  - type: textarea
+    id: result
+    attributes:
+      label: 预期结果与实际结果
+    validations:
+      required: true
+  - type: textarea
+    id: sample
+    attributes:
+      label: 最小示例或截图
+      description: 可手工重建几行测试数据。截图请遮住个人信息；日志只贴相关片段。
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: 提交前检查
+      options:
+        - label: 已检查内容，不含密钥、个人信息或未获授权的工程资料
+          required: true

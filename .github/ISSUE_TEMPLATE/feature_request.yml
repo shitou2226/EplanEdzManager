@@ -1,0 +1,22 @@
+name: 功能建议
+description: 说说你在实际操作中遇到的麻烦。
+title: "[建议] "
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: 你要解决什么问题
+      description: 请给出一个具体场景，以及现在怎么处理。
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 希望软件如何帮助你
+    validations:
+      required: true
+  - type: textarea
+    id: example
+    attributes:
+      label: 可复现的小例子
+      description: 使用人工数据，不要上传企业工程、部件包或数据库。
